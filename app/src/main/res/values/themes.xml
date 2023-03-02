@@ -1,0 +1,29 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.CollectionsBenchmark" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/amber_700</item>
+        <item name="colorPrimaryVariant">@color/amber_900</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="backgroundColor">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorSecondary">@color/black</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="android:colorAccent">@color/white</item>
+        <item name="colorPrimaryDark">?attr/colorPrimary</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="colorButtonNormal">@color/amber_700</item>
+
+    </style>
+
+
+    <style name="CollDialogTheme" parent="Theme.CollectionsBenchmark">
+        <item name="android:windowBackground">?attr/backgroundColor</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">false</item>
+    </style>
+
+<!--    <style name="dff" parent=""-->
+
+
+</resources>
