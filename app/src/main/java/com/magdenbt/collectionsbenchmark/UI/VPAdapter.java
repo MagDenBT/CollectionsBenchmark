@@ -8,6 +8,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.magdenbt.collectionsbenchmark.CollectionsType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class VPAdapter extends FragmentStateAdapter{
 
     public VPAdapter(@NonNull FragmentActivity fragmentActivity) {
@@ -21,15 +24,14 @@ public class VPAdapter extends FragmentStateAdapter{
         if(position == 0){
             collectionsType = CollectionsType.LIST;
         }else {
-
             collectionsType = CollectionsType.MAP;
         }
         return new CustomFragment(collectionsType);
     }
 
-
     @Override
     public int getItemCount() {
         return 2;
     }
+
 }

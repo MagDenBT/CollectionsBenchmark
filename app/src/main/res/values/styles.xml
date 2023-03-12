@@ -10,7 +10,7 @@
 
     <style name="tab_style" parent="Widget.Design.TabLayout">
         <item name="tabTextAppearance">@style/tab_text_appearance</item>
-        <item name="tabSelectedTextColor">?android:attr/textColor</item>
+        <item name="tabSelectedTextColor">?android:attr/colorAccent</item>
         <item name="tabTextColor">?android:attr/textColorSecondary</item>
         <item name="tabBackground">@drawable/tabs_selector</item>
         <item name="tabIndicator">@null</item>

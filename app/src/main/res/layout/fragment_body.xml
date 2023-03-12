@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/TextInputLayout"
+        android:id="@+id/til"
         style="@style/in_elements_layout"
         android:layout_marginVertical="24dp"
 
@@ -33,10 +33,10 @@
         android:id="@+id/bStartStop"
         style="@style/bStartStop"
         android:text="@string/button_start_name"
-        app:layout_constraintBottom_toBottomOf="@+id/TextInputLayout"
+        app:layout_constraintBottom_toBottomOf="@+id/til"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/TextInputLayout"
-        app:layout_constraintTop_toTopOf="@+id/TextInputLayout"
+        app:layout_constraintStart_toEndOf="@+id/til"
+        app:layout_constraintTop_toTopOf="@+id/til"
         app:layout_constraintWidth_default="percent"
         app:layout_constraintWidth_percent="0.33" />
 
@@ -48,6 +48,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TextInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/til"
+        tools:listitem="@layout/data_item"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

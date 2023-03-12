@@ -1,18 +1,20 @@
 package com.magdenbt.collectionsbenchmark.UI;
 
 import android.app.AlertDialog;
+
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,87 +23,86 @@ import android.view.animation.CycleInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.magdenbt.collectionsbenchmark.CollectionsType;
 import com.magdenbt.collectionsbenchmark.R;
-import com.magdenbt.collectionsbenchmark.StatisticAdapter;
-import com.magdenbt.collectionsbenchmark.Worker;
-import com.google.android.material.textfield.TextInputLayout;
+import com.magdenbt.collectionsbenchmark.DataModel;
+import com.magdenbt.collectionsbenchmark.UI.Stat.DataViewModel;
+import com.magdenbt.collectionsbenchmark.UI.Stat.DataDiffCallback;
+import com.magdenbt.collectionsbenchmark.UI.Stat.DataVMFactory;
+import com.magdenbt.collectionsbenchmark.UI.Stat.DataAdapter;
+import com.magdenbt.collectionsbenchmark.databinding.FragmentBodyBinding;
+
+import java.io.Serializable;
 
 public class CustomFragment extends Fragment{
 
-    private int collectionSize = 0;
-    private int elementsAmount = 0;
-    private TextView inElementsAmount;
-    private TextInputLayout til;
+    private FragmentBodyBinding binding;
+    private DataViewModel rvModel;
+    private final String COLL_TYPE_KEY = "collectionsType";
 
-    private final CollectionsType collectionsType;
-
-
-    public CustomFragment(CollectionsType collectionsType) {
-        this.collectionsType = collectionsType;
+    public CustomFragment() {
+        super();
     }
 
+    public CustomFragment(CollectionsType collectionsType) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(COLL_TYPE_KEY, collectionsType);
+        setArguments(bundle);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_body, container, false);
-
-        return view.getRootView();
+        binding = FragmentBodyBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        setRView(view);
-        inElementsAmount = view.findViewById(R.id.inElementsAmount);
-        Button bStartStop = view.findViewById(R.id.bStartStop);
-        til = view.findViewById(R.id.TextInputLayout);
-        bStartStop.setOnClickListener(getStartButtonListener());
+        setRView();
+        binding.bStartStop.setOnClickListener(getStartButtonListener());
+    }
+
+    private void setRView() {
+        CollectionsType collectionsType = (CollectionsType) getArguments().getSerializable(COLL_TYPE_KEY);
+        int columnAmount = CollectionsType.LIST == collectionsType ? 3 : 2;
+
+        binding.rView.setLayoutManager(new GridLayoutManager(getContext(), columnAmount));
+        DataAdapter statisticAdapter = new DataAdapter(new DataDiffCallback());
+        rvModel = new ViewModelProvider(this, new DataVMFactory(getActivity().getApplication(), collectionsType)).get(DataViewModel.class);
+        for (MutableLiveData<DataModel> mutableLiveDatum : rvModel.getMutableLiveData()) {
+            mutableLiveDatum.observe(getViewLifecycleOwner(), model -> {
+                statisticAdapter.notifyItemChanged(rvModel.getMutableLiveData().indexOf(mutableLiveDatum));
+            });
+        }
+        statisticAdapter.submitList(rvModel.getMutableLiveData());
+        binding.rView.setAdapter(statisticAdapter);
     }
 
     private View.OnClickListener getStartButtonListener() {
         return v -> {
-
-            String amountData = inElementsAmount.getText().toString();
-
+            String amountData = binding.inElementsAmount.getText().toString();
             if (amountData.trim().isEmpty()) {
                 Interpolator cycleInterpolator = new CycleInterpolator(7);
                 Animation shake = new TranslateAnimation(-10, 10, 0, 0);
                 shake.setDuration(50);
                 shake.setInterpolator(cycleInterpolator);
-                til.requestFocus();
-                til.startAnimation(shake);
+                binding.til.requestFocus();
+                binding.til.startAnimation(shake);
                 return;
             }
             try {
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                int amount = Integer.parseInt(amountData);
-                if (collectionSize == 0) {
-                    elementsAmount = amount;
-                    showMyDialog();
-                    return;
-                } else if (elementsAmount != amount) {
-                    elementsAmount = amount;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setMessage(getText(R.string.question_change_coll_size));
-                    builder.setPositiveButton(getText(R.string.yes),(dialog, which) -> showMyDialog());
-                    builder.setNegativeButton(getText(R.string.no),(dialog, which) -> startOperations());
-                    builder.show();
-                }
-                startOperations();
+                int collectionSize = new ViewModelProvider(getActivity()).get(SharedCollSizeVM.class).getCollectionSize();
+                rvModel.startBenchmark(collectionSize, Integer.parseInt(amountData));
             } catch (NumberFormatException e) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setMessage(getText(R.string.alert_need_number));
@@ -112,36 +113,9 @@ public class CustomFragment extends Fragment{
         };
     }
 
-    private void startOperations() {
-        Handler mHandler = new Handler(Looper.getMainLooper());
-        Worker.getInstance().startOperations(collectionSize, elementsAmount, collectionsType, mHandler);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
-
-
-    private void setRView(@NonNull View view) {
-        int columnAmount;
-        if (collectionsType == CollectionsType.LIST) {
-            columnAmount = 3;
-        } else {
-            columnAmount = 2;
-        }
-
-        RecyclerView recyclerView = view.findViewById(R.id.rView);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), columnAmount));
-        recyclerView.setAdapter(new StatisticAdapter(view.getContext(), collectionsType));
-    }
-
-    public void showMyDialog() {
-        getChildFragmentManager().setFragmentResultListener("reqCollectionSize", getViewLifecycleOwner(), (requestKey, result) -> {
-            if (requestKey.equals("reqCollectionSize")) collectionSize = result.getInt("collectionSize");
-        });
-        DialogCollectionSize dialog = new DialogCollectionSize();
-        Bundle bundle = new Bundle();
-        bundle.putInt("elementsAmount", elementsAmount);
-        bundle.putSerializable("collectionsType", collectionsType);
-        dialog.setArguments(bundle);
-        dialog.show(getChildFragmentManager(), "someTag");
-    }
-
-
 }

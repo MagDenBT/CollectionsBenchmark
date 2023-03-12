@@ -1,17 +1,14 @@
 <resources>
     <string name="app_name">Collections Benchmark</string>
     <string name="app_bar_title">Collection &amp; Maps</string>
-    <string name="app_bar_dialog_title">Activity</string>
     <string name="tab_collections">Collections</string>
     <string name="tab_maps">Maps</string>
     <string name="button_calculate_name">CALCULATE</string>
     <string name="button_start_name">START</string>
-    <string name="button_stop_name">STOP</string>
     <string name="text_view_dialog_invitation">Please enter collection size and number of elements to compare</string>
     <string name="input_dialog_elements_amount_error">Error.You need enter elements count.</string>
     <string name="input_dialog_elements_amount_hint">Collection size</string>
     <string name="input_elements_amount_hint">Elements amount:</string>
-    <string name="input_elements_amount_text_def">Enter a number</string>
 
     <!-- Operations with collections Strings -->
 
@@ -27,19 +24,6 @@
     <string name="operation_status_removing">Removing</string>
     <string name="operation_status_search_by_key">Search by key</string>
 
-    <string name="array_list">ArrayList</string>
-    <string name="linked_list">LinkedList</string>
-    <string name="copy_on_write_array_list">CopyOnWriteArrayList</string>
-    <string name="tree_map">TreeMap</string>
-    <string name="hash_map">HashMap</string>
-
-    <string name="milliseconds">ms</string>
-
-    <string name="FOR_RENDER_operation">Adding in the beginning ArrayList N/A ms</string>
     <string name="alert_need_number">You need to enter a number</string>
-    <string name="question_change_coll_size">Change the size of collections?</string>
-    <string name="min_coll_size_should_be">The minimum size of the collection should be - </string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
 
 </resources>
