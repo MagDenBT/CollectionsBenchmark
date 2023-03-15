@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
@@ -15,10 +16,10 @@ import com.magdenbt.collectionsbenchmark.StatModel;
 import com.magdenbt.collectionsbenchmark.databinding.StatItemBinding;
 
 
-public class StatAdapter extends ListAdapter<MutableLiveData<StatModel>, StatAdapter.ViewHolder>{
+public class StatAdapter extends ListAdapter<LiveData<StatModel>, StatAdapter.ViewHolder>{
 
 
-    public StatAdapter(@NonNull DiffUtil.ItemCallback<MutableLiveData<StatModel>> itemCallback) {
+    public StatAdapter(@NonNull DiffUtil.ItemCallback<LiveData<StatModel>> itemCallback) {
         super(itemCallback);
     }
 
@@ -43,7 +44,7 @@ public class StatAdapter extends ListAdapter<MutableLiveData<StatModel>, StatAda
             super(binding.getRoot());
             this.binding = binding;
         }
-        public void bind(MutableLiveData<StatModel> ldStatisticModel){
+        public void bind(LiveData<StatModel> ldStatisticModel){
             binding.setLdStatModel(ldStatisticModel);
         }
     }

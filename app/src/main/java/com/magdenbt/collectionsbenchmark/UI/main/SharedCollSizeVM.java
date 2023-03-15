@@ -1,23 +1,17 @@
 package com.magdenbt.collectionsbenchmark.UI.main;
 
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.Objects;
 
 public class SharedCollSizeVM extends ViewModel {
-    private final MutableLiveData<Integer> liveData = new MutableLiveData<>();
+    private int collectionsSize = 0;
 
     public void setCollectionsSize(int collectionsSize){
-        liveData.setValue(collectionsSize);
+        this.collectionsSize = collectionsSize;
     }
 
     public int getCollectionSize(){
-        try {
-            return Objects.requireNonNull(liveData.getValue());
-        } catch (NullPointerException e){
-            return 0;
-        }
-
+     return collectionsSize;
     }
 }

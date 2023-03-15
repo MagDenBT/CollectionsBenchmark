@@ -10,11 +10,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +24,14 @@ import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.magdenbt.collectionsbenchmark.CollectionsType;
 import com.magdenbt.collectionsbenchmark.R;
 import com.magdenbt.collectionsbenchmark.StatModel;
+import com.magdenbt.collectionsbenchmark.UI.KeyboardSource;
 import com.magdenbt.collectionsbenchmark.UI.Stat.StatVM;
 import com.magdenbt.collectionsbenchmark.UI.Stat.StatDiffCallback;
 import com.magdenbt.collectionsbenchmark.UI.Stat.StatVMFactory;
@@ -39,6 +43,7 @@ public class VPFragment extends Fragment{
     private FragmentBodyBinding binding;
     private StatVM rvModel;
     private final String COLL_TYPE_KEY = "collectionsType";
+    private KeyboardSource keyboardSource;
 
     public VPFragment() {
         super();
@@ -65,6 +70,14 @@ public class VPFragment extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         setRView();
+        keyboardSource = new KeyboardSource(getContext());
+        binding.inElementsAmount.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT){
+                keyboardSource.hideKeyboard(v);
+                return true;
+            }
+            return false;
+        });
         binding.bStartStop.setOnClickListener(getStartButtonListener());
     }
 
@@ -75,7 +88,7 @@ public class VPFragment extends Fragment{
         binding.rView.setLayoutManager(new GridLayoutManager(getContext(), columnAmount));
         StatAdapter statisticAdapter = new StatAdapter(new StatDiffCallback());
         rvModel = new ViewModelProvider(this, new StatVMFactory(getActivity().getApplication(), collectionsType)).get(StatVM.class);
-        for (MutableLiveData<StatModel> mutableLiveDatum : rvModel.getMutableLiveData()) {
+        for (LiveData<StatModel> mutableLiveDatum : rvModel.getMutableLiveData()) {
             mutableLiveDatum.observe(getViewLifecycleOwner(), model -> {
                 statisticAdapter.notifyItemChanged(rvModel.getMutableLiveData().indexOf(mutableLiveDatum));
             });
@@ -97,8 +110,7 @@ public class VPFragment extends Fragment{
                 return;
             }
             try {
-                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                keyboardSource.hideKeyboard(v);
                 int collectionSize = new ViewModelProvider(getActivity()).get(SharedCollSizeVM.class).getCollectionSize();
                 rvModel.startBenchmark(collectionSize, Integer.parseInt(amountData));
             } catch (NumberFormatException e) {
@@ -106,7 +118,7 @@ public class VPFragment extends Fragment{
                 builder.setMessage(getText(R.string.alert_need_number));
                 builder.show();
             } catch (Exception e) {
-              Toast.makeText(v.getContext(), "ТЕХНИЧЕСКАЯ ОШИБКА. АААА!", Toast.LENGTH_LONG).show();
+                Log.e(this.getClass().getCanonicalName(), "Benchmark start error - " + e.getMessage());
             }
         };
     }
