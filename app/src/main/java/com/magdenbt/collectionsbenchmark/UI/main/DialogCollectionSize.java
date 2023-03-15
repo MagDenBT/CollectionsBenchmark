@@ -1,17 +1,14 @@
-package com.magdenbt.collectionsbenchmark.UI;
+package com.magdenbt.collectionsbenchmark.UI.main;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.magdenbt.collectionsbenchmark.MainActivity;
 import com.magdenbt.collectionsbenchmark.R;
-import com.google.android.material.textfield.TextInputEditText;
 import com.magdenbt.collectionsbenchmark.databinding.DialogCollectionSizeBinding;
 
 public class DialogCollectionSize extends DialogFragment {

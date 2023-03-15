@@ -11,39 +11,39 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.magdenbt.collectionsbenchmark.R;
-import com.magdenbt.collectionsbenchmark.DataModel;
-import com.magdenbt.collectionsbenchmark.databinding.DataItemBinding;
+import com.magdenbt.collectionsbenchmark.StatModel;
+import com.magdenbt.collectionsbenchmark.databinding.StatItemBinding;
 
 
-public class DataAdapter extends ListAdapter<MutableLiveData<DataModel>, DataAdapter.ViewHolder>{
+public class StatAdapter extends ListAdapter<MutableLiveData<StatModel>, StatAdapter.ViewHolder>{
 
 
-    public DataAdapter(@NonNull DiffUtil.ItemCallback<MutableLiveData<DataModel>> itemCallback) {
+    public StatAdapter(@NonNull DiffUtil.ItemCallback<MutableLiveData<StatModel>> itemCallback) {
         super(itemCallback);
     }
 
     @NonNull
     @Override
-    public DataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public StatAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        DataItemBinding binding = DataBindingUtil.inflate(inflater, R.layout.data_item, parent, false);
+        StatItemBinding binding = DataBindingUtil.inflate(inflater, R.layout.stat_item, parent, false);
         return new ViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(DataAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(StatAdapter.ViewHolder holder, int position) {
        holder.bind(getItem(position));
     }
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        DataItemBinding binding;
+        StatItemBinding binding;
 
-        ViewHolder(DataItemBinding binding){
+        ViewHolder(StatItemBinding binding){
             super(binding.getRoot());
             this.binding = binding;
         }
-        public void bind(MutableLiveData<DataModel> ldStatisticModel){
+        public void bind(MutableLiveData<StatModel> ldStatisticModel){
             binding.setLdStatModel(ldStatisticModel);
         }
     }

@@ -9,7 +9,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import io.reactivex.rxjava3.core.Single;
 
 
-public class Benchmark {
+public class OperationBenchmark {
 
 
     public static Single<Long> createOb(int sizeCollection, int elementsAmount, OperationTypes operationType) {

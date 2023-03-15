@@ -4,17 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.magdenbt.collectionsbenchmark.DataModel;
+import com.magdenbt.collectionsbenchmark.StatModel;
 
-public class DataDiffCallback extends DiffUtil.ItemCallback<MutableLiveData<DataModel>> {
+public class StatDiffCallback extends DiffUtil.ItemCallback<MutableLiveData<StatModel>> {
 
     @Override
-    public boolean areItemsTheSame(@NonNull MutableLiveData<DataModel> oldItem, @NonNull MutableLiveData<DataModel> newItem) {
+    public boolean areItemsTheSame(@NonNull MutableLiveData<StatModel> oldItem, @NonNull MutableLiveData<StatModel> newItem) {
         return oldItem.getValue().equals(newItem.getValue());
     }
 
     @Override
-    public boolean areContentsTheSame(@NonNull  MutableLiveData<DataModel> oldItem, @NonNull  MutableLiveData<DataModel> newItem) {
+    public boolean areContentsTheSame(@NonNull  MutableLiveData<StatModel> oldItem, @NonNull  MutableLiveData<StatModel> newItem) {
         return oldItem.getValue().getBusy() == newItem.getValue().getBusy() && oldItem.getValue().getStatus().equals(newItem.getValue().getStatus()) ;
     }
 

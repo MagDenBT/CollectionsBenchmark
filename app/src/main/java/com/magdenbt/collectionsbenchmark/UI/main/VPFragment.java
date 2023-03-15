@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.UI;
+package com.magdenbt.collectionsbenchmark.UI.main;
 
 import android.app.AlertDialog;
 
@@ -27,26 +27,24 @@ import android.widget.Toast;
 
 import com.magdenbt.collectionsbenchmark.CollectionsType;
 import com.magdenbt.collectionsbenchmark.R;
-import com.magdenbt.collectionsbenchmark.DataModel;
-import com.magdenbt.collectionsbenchmark.UI.Stat.DataViewModel;
-import com.magdenbt.collectionsbenchmark.UI.Stat.DataDiffCallback;
-import com.magdenbt.collectionsbenchmark.UI.Stat.DataVMFactory;
-import com.magdenbt.collectionsbenchmark.UI.Stat.DataAdapter;
+import com.magdenbt.collectionsbenchmark.StatModel;
+import com.magdenbt.collectionsbenchmark.UI.Stat.StatViewModel;
+import com.magdenbt.collectionsbenchmark.UI.Stat.StatDiffCallback;
+import com.magdenbt.collectionsbenchmark.UI.Stat.StatVMFactory;
+import com.magdenbt.collectionsbenchmark.UI.Stat.StatAdapter;
 import com.magdenbt.collectionsbenchmark.databinding.FragmentBodyBinding;
 
-import java.io.Serializable;
-
-public class CustomFragment extends Fragment{
+public class VPFragment extends Fragment{
 
     private FragmentBodyBinding binding;
-    private DataViewModel rvModel;
+    private StatViewModel rvModel;
     private final String COLL_TYPE_KEY = "collectionsType";
 
-    public CustomFragment() {
+    public VPFragment() {
         super();
     }
 
-    public CustomFragment(CollectionsType collectionsType) {
+    public VPFragment(CollectionsType collectionsType) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(COLL_TYPE_KEY, collectionsType);
         setArguments(bundle);
@@ -75,9 +73,9 @@ public class CustomFragment extends Fragment{
         int columnAmount = CollectionsType.LIST == collectionsType ? 3 : 2;
 
         binding.rView.setLayoutManager(new GridLayoutManager(getContext(), columnAmount));
-        DataAdapter statisticAdapter = new DataAdapter(new DataDiffCallback());
-        rvModel = new ViewModelProvider(this, new DataVMFactory(getActivity().getApplication(), collectionsType)).get(DataViewModel.class);
-        for (MutableLiveData<DataModel> mutableLiveDatum : rvModel.getMutableLiveData()) {
+        StatAdapter statisticAdapter = new StatAdapter(new StatDiffCallback());
+        rvModel = new ViewModelProvider(this, new StatVMFactory(getActivity().getApplication(), collectionsType)).get(StatViewModel.class);
+        for (MutableLiveData<StatModel> mutableLiveDatum : rvModel.getMutableLiveData()) {
             mutableLiveDatum.observe(getViewLifecycleOwner(), model -> {
                 statisticAdapter.notifyItemChanged(rvModel.getMutableLiveData().indexOf(mutableLiveDatum));
             });

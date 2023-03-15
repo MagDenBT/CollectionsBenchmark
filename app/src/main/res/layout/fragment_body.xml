@@ -25,6 +25,7 @@
             android:id="@+id/inElementsAmount"
             style="@style/in_elements"
             android:hint="@string/input_elements_amount_hint"
+            android:inputType="number"
            />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -49,6 +50,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/til"
-        tools:listitem="@layout/data_item"/>
+        tools:listitem="@layout/stat_item"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

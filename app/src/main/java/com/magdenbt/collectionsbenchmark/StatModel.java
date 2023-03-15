@@ -15,11 +15,11 @@ import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class DataModel implements SingleObserver<String>  {
+public class StatModel implements SingleObserver<String>  {
 
 
     private final OperationTypes operationType;
-    private final Observer<DataModel> observer;
+    private final Observer<StatModel> observer;
     private final Context context;
     private int busy = View.GONE;
     private String prefix;
@@ -29,7 +29,7 @@ public class DataModel implements SingleObserver<String>  {
 
 
 
-    public DataModel(Context context, OperationTypes operationType, Observer<DataModel> observer) {
+    public StatModel(Context context, OperationTypes operationType, Observer<StatModel> observer) {
         this.context = context;
         this.operationType = operationType;
         this.observer = observer;
@@ -172,7 +172,7 @@ public class DataModel implements SingleObserver<String>  {
 
 
     public void startBenchmark(int sizeCollection, int amountElements){
-        Benchmark.createOb(sizeCollection, amountElements, operationType).
+        OperationBenchmark.createOb(sizeCollection, amountElements, operationType).
                 observeOn(AndroidSchedulers.mainThread()).
                 subscribeOn(Schedulers.single()).
                 map(String::valueOf).

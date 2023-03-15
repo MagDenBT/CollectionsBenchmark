@@ -8,31 +8,31 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.magdenbt.collectionsbenchmark.CollectionsType;
-import com.magdenbt.collectionsbenchmark.DataModel;
-import com.magdenbt.collectionsbenchmark.DataRepository;
+import com.magdenbt.collectionsbenchmark.StatModel;
+import com.magdenbt.collectionsbenchmark.StatRepository;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class DataViewModel extends AndroidViewModel {
+public class StatViewModel extends AndroidViewModel {
 
-    private ArrayList<MutableLiveData<DataModel>> mutableLiveData = new ArrayList<>();
+    private ArrayList<MutableLiveData<StatModel>> mutableLiveData = new ArrayList<>();
     private final CollectionsType collectionsType;
 
 
-    public DataViewModel(@NonNull Application application, CollectionsType collectionsType) {
+    public StatViewModel(@NonNull Application application, CollectionsType collectionsType) {
         super(application);
         this.collectionsType = collectionsType;
     }
 
-    public ArrayList<MutableLiveData<DataModel>> getMutableLiveData() {
-        if(mutableLiveData.isEmpty())  mutableLiveData = DataRepository.getModels(getApplication().getApplicationContext(), collectionsType);
+    public ArrayList<MutableLiveData<StatModel>> getMutableLiveData() {
+        if(mutableLiveData.isEmpty())  mutableLiveData = StatRepository.getModels(getApplication().getApplicationContext(), collectionsType);
         return mutableLiveData;
     }
 
 
     public void startBenchmark(int sizeCollection, int amountElements){
-        for (MutableLiveData<DataModel> mutableLiveDatum : mutableLiveData) {
+        for (MutableLiveData<StatModel> mutableLiveDatum : mutableLiveData) {
             try {
                 Objects.requireNonNull(mutableLiveDatum.getValue()).startBenchmark(sizeCollection, amountElements);
             }catch (NullPointerException e){

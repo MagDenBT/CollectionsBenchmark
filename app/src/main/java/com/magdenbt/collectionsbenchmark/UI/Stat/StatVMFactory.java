@@ -8,12 +8,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.magdenbt.collectionsbenchmark.CollectionsType;
 
-public class DataVMFactory implements ViewModelProvider.Factory{
+public class StatVMFactory implements ViewModelProvider.Factory{
 
     private final CollectionsType collectionsType;
     private final Application application;
 
-    public DataVMFactory(Application application, CollectionsType collectionsType){
+    public StatVMFactory(Application application, CollectionsType collectionsType){
         this.collectionsType = collectionsType;
         this.application = application;
     }
@@ -21,7 +21,7 @@ public class DataVMFactory implements ViewModelProvider.Factory{
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if(modelClass.isAssignableFrom(DataViewModel.class)) return (T) new DataViewModel(application, collectionsType );
+        if(modelClass.isAssignableFrom(StatViewModel.class)) return (T) new StatViewModel(application, collectionsType );
         throw new IllegalArgumentException("Unknown ViewModel class");
     }
 }

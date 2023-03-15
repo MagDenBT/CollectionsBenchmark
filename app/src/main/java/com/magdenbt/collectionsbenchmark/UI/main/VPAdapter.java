@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.UI;
+package com.magdenbt.collectionsbenchmark.UI.main;
 
 
 import androidx.annotation.NonNull;
@@ -7,9 +7,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.magdenbt.collectionsbenchmark.CollectionsType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class VPAdapter extends FragmentStateAdapter{
 
@@ -26,7 +23,7 @@ public class VPAdapter extends FragmentStateAdapter{
         }else {
             collectionsType = CollectionsType.MAP;
         }
-        return new CustomFragment(collectionsType);
+        return new VPFragment(collectionsType);
     }
 
     @Override
