@@ -14,13 +14,13 @@ import com.magdenbt.collectionsbenchmark.StatRepository;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class StatViewModel extends AndroidViewModel {
+public class StatVM extends AndroidViewModel {
 
     private ArrayList<MutableLiveData<StatModel>> mutableLiveData = new ArrayList<>();
     private final CollectionsType collectionsType;
 
 
-    public StatViewModel(@NonNull Application application, CollectionsType collectionsType) {
+    public StatVM(@NonNull Application application, CollectionsType collectionsType) {
         super(application);
         this.collectionsType = collectionsType;
     }

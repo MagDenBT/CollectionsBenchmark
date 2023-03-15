@@ -28,7 +28,7 @@ import android.widget.Toast;
 import com.magdenbt.collectionsbenchmark.CollectionsType;
 import com.magdenbt.collectionsbenchmark.R;
 import com.magdenbt.collectionsbenchmark.StatModel;
-import com.magdenbt.collectionsbenchmark.UI.Stat.StatViewModel;
+import com.magdenbt.collectionsbenchmark.UI.Stat.StatVM;
 import com.magdenbt.collectionsbenchmark.UI.Stat.StatDiffCallback;
 import com.magdenbt.collectionsbenchmark.UI.Stat.StatVMFactory;
 import com.magdenbt.collectionsbenchmark.UI.Stat.StatAdapter;
@@ -37,7 +37,7 @@ import com.magdenbt.collectionsbenchmark.databinding.FragmentBodyBinding;
 public class VPFragment extends Fragment{
 
     private FragmentBodyBinding binding;
-    private StatViewModel rvModel;
+    private StatVM rvModel;
     private final String COLL_TYPE_KEY = "collectionsType";
 
     public VPFragment() {
@@ -74,7 +74,7 @@ public class VPFragment extends Fragment{
 
         binding.rView.setLayoutManager(new GridLayoutManager(getContext(), columnAmount));
         StatAdapter statisticAdapter = new StatAdapter(new StatDiffCallback());
-        rvModel = new ViewModelProvider(this, new StatVMFactory(getActivity().getApplication(), collectionsType)).get(StatViewModel.class);
+        rvModel = new ViewModelProvider(this, new StatVMFactory(getActivity().getApplication(), collectionsType)).get(StatVM.class);
         for (MutableLiveData<StatModel> mutableLiveDatum : rvModel.getMutableLiveData()) {
             mutableLiveDatum.observe(getViewLifecycleOwner(), model -> {
                 statisticAdapter.notifyItemChanged(rvModel.getMutableLiveData().indexOf(mutableLiveDatum));

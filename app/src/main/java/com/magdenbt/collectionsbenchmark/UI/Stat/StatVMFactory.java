@@ -21,7 +21,7 @@ public class StatVMFactory implements ViewModelProvider.Factory{
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if(modelClass.isAssignableFrom(StatViewModel.class)) return (T) new StatViewModel(application, collectionsType );
+        if(modelClass.isAssignableFrom(StatVM.class)) return (T) new StatVM(application, collectionsType );
         throw new IllegalArgumentException("Unknown ViewModel class");
     }
 }
