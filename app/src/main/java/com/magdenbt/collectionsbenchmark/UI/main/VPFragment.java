@@ -2,7 +2,6 @@ package com.magdenbt.collectionsbenchmark.UI.main;
 
 import android.app.AlertDialog;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,7 +10,6 @@ import androidx.fragment.app.Fragment;
 
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -25,8 +23,6 @@ import android.view.animation.CycleInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import com.magdenbt.collectionsbenchmark.CollectionsType;
 import com.magdenbt.collectionsbenchmark.R;
@@ -88,12 +84,12 @@ public class VPFragment extends Fragment{
         binding.rView.setLayoutManager(new GridLayoutManager(getContext(), columnAmount));
         StatAdapter statisticAdapter = new StatAdapter(new StatDiffCallback());
         rvModel = new ViewModelProvider(this, new StatVMFactory(getActivity().getApplication(), collectionsType)).get(StatVM.class);
-        for (LiveData<StatModel> mutableLiveDatum : rvModel.getMutableLiveData()) {
-            mutableLiveDatum.observe(getViewLifecycleOwner(), model -> {
-                statisticAdapter.notifyItemChanged(rvModel.getMutableLiveData().indexOf(mutableLiveDatum));
+        for (LiveData<StatModel> statModelLiveData : rvModel.getStatModelsLD()) {
+            statModelLiveData.observe(getViewLifecycleOwner(), model -> {
+                statisticAdapter.notifyItemChanged(rvModel.getStatModelsLD().indexOf(statModelLiveData));
             });
         }
-        statisticAdapter.submitList(rvModel.getMutableLiveData());
+        statisticAdapter.submitList(rvModel.getStatModelsLD());
         binding.rView.setAdapter(statisticAdapter);
     }
 

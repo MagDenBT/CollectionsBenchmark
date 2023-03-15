@@ -6,19 +6,17 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.magdenbt.collectionsbenchmark.CollectionsType;
 import com.magdenbt.collectionsbenchmark.StatModel;
 import com.magdenbt.collectionsbenchmark.StatRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class StatVM extends AndroidViewModel {
 
-    private List<LiveData<StatModel>> mutableLiveData;
+    private List<LiveData<StatModel>> statModelsLD;
     private final CollectionsType collectionsType;
     private final StatRepository statRepository;
 
@@ -28,14 +26,14 @@ public class StatVM extends AndroidViewModel {
         statRepository = new StatRepository(getApplication().getApplicationContext());
     }
 
-    public List<LiveData<StatModel>> getMutableLiveData() {
-        if(mutableLiveData == null)  mutableLiveData = statRepository.getModels( collectionsType);
-        return mutableLiveData;
+    public List<LiveData<StatModel>> getStatModelsLD() {
+        if(statModelsLD == null)  statModelsLD = statRepository.getModels( collectionsType);
+        return statModelsLD;
     }
 
 
     public void startBenchmark(int sizeCollection, int amountElements){
-        for (LiveData<StatModel> mutableLiveDatum : mutableLiveData) {
+        for (LiveData<StatModel> mutableLiveDatum : statModelsLD) {
             try {
                 Objects.requireNonNull(mutableLiveDatum.getValue()).startBenchmark(sizeCollection, amountElements);
             }catch (NullPointerException e){
