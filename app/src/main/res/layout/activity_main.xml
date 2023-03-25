@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.main.MainActivity">
+    tools:context=".UI.ViewFlow.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/bar"

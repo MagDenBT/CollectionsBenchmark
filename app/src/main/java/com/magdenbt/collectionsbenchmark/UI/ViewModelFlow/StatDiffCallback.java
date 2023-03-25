@@ -1,13 +1,18 @@
-package com.magdenbt.collectionsbenchmark.UI.Stat;
+package com.magdenbt.collectionsbenchmark.UI.ViewModelFlow;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.magdenbt.collectionsbenchmark.StatModel;
+import com.magdenbt.collectionsbenchmark.modelflow.StatModel;
+
+import javax.inject.Inject;
 
 public class StatDiffCallback extends DiffUtil.ItemCallback<LiveData<StatModel>> {
+
+    @Inject
+    public StatDiffCallback() {
+    }
 
     @Override
     public boolean areItemsTheSame(@NonNull LiveData<StatModel> oldItem, @NonNull LiveData<StatModel> newItem) {

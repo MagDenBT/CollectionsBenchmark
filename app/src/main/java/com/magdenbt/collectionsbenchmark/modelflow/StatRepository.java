@@ -1,9 +1,11 @@
-package com.magdenbt.collectionsbenchmark;
+package com.magdenbt.collectionsbenchmark.modelflow;
 
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
+import com.magdenbt.collectionsbenchmark.CollectionsType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +21,7 @@ public class StatRepository {
 
     public List<LiveData<StatModel>> getModels(CollectionsType collectionsType){
 
-        ArrayList<LiveData<StatModel>> models = new ArrayList<>();
+        ArrayList<LiveData<StatModel>> models =  new ArrayList<>();
         for (OperationTypes operationType: OperationTypes.values()
         ) {
             if(operationType.collectionsType == collectionsType){

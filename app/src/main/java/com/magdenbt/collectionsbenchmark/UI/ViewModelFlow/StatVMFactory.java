@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.UI.Stat;
+package com.magdenbt.collectionsbenchmark.UI.ViewModelFlow;
 
 import android.app.Application;
 
@@ -12,6 +12,7 @@ public class StatVMFactory implements ViewModelProvider.Factory{
 
     private final CollectionsType collectionsType;
     private final Application application;
+
 
     public StatVMFactory(Application application, CollectionsType collectionsType){
         this.collectionsType = collectionsType;

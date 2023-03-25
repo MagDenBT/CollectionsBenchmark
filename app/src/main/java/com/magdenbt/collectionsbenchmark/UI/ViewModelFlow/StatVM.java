@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.UI.Stat;
+package com.magdenbt.collectionsbenchmark.UI.ViewModelFlow;
 
 import android.app.Application;
 import android.util.Log;
@@ -8,8 +8,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.magdenbt.collectionsbenchmark.CollectionsType;
-import com.magdenbt.collectionsbenchmark.StatModel;
-import com.magdenbt.collectionsbenchmark.StatRepository;
+import com.magdenbt.collectionsbenchmark.modelflow.StatModel;
+import com.magdenbt.collectionsbenchmark.modelflow.StatRepository;
 
 import java.util.List;
 import java.util.Objects;

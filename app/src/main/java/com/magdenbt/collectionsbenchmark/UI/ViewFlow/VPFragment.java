@@ -1,7 +1,8 @@
-package com.magdenbt.collectionsbenchmark.UI.main;
+package com.magdenbt.collectionsbenchmark.UI.ViewFlow;
 
 import android.app.AlertDialog;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,27 +20,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.CycleInterpolator;
-import android.view.animation.Interpolator;
-import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 
 import com.magdenbt.collectionsbenchmark.CollectionsType;
+import com.magdenbt.collectionsbenchmark.InitApp;
 import com.magdenbt.collectionsbenchmark.R;
-import com.magdenbt.collectionsbenchmark.StatModel;
+import com.magdenbt.collectionsbenchmark.modelflow.StatModel;
 import com.magdenbt.collectionsbenchmark.UI.KeyboardSource;
-import com.magdenbt.collectionsbenchmark.UI.Stat.StatVM;
-import com.magdenbt.collectionsbenchmark.UI.Stat.StatDiffCallback;
-import com.magdenbt.collectionsbenchmark.UI.Stat.StatVMFactory;
-import com.magdenbt.collectionsbenchmark.UI.Stat.StatAdapter;
+import com.magdenbt.collectionsbenchmark.UI.SharedCollSizeVM;
+import com.magdenbt.collectionsbenchmark.UI.ViewModelFlow.StatVM;
+import com.magdenbt.collectionsbenchmark.UI.ViewModelFlow.StatAdapter;
 import com.magdenbt.collectionsbenchmark.databinding.FragmentBodyBinding;
+import com.magdenbt.collectionsbenchmark.di.Qualifiers.VPFragmentQ;
+
+import javax.inject.Inject;
+
+import dagger.Lazy;
 
 public class VPFragment extends Fragment{
 
     private FragmentBodyBinding binding;
     private StatVM rvModel;
     private final String COLL_TYPE_KEY = "collectionsType";
-    private KeyboardSource keyboardSource;
+    @Inject public KeyboardSource keyboardSource;
+    @Inject public StatAdapter statisticAdapter;
+    @Inject public ViewModelProvider viewModelProvider;
+    @Inject public GridLayoutManager gridLayoutManager;
+    @Inject public Animation shake;
+    @VPFragmentQ
+    @Inject public Lazy<SharedCollSizeVM> sharedCollSizeVM;
+
+
 
     public VPFragment() {
         super();
@@ -66,7 +77,6 @@ public class VPFragment extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         setRView();
-        keyboardSource = new KeyboardSource(getContext());
         binding.inElementsAmount.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_NEXT){
                 keyboardSource.hideKeyboard(v);
@@ -78,12 +88,8 @@ public class VPFragment extends Fragment{
     }
 
     private void setRView() {
-        CollectionsType collectionsType = (CollectionsType) getArguments().getSerializable(COLL_TYPE_KEY);
-        int columnAmount = CollectionsType.LIST == collectionsType ? 3 : 2;
-
-        binding.rView.setLayoutManager(new GridLayoutManager(getContext(), columnAmount));
-        StatAdapter statisticAdapter = new StatAdapter(new StatDiffCallback());
-        rvModel = new ViewModelProvider(this, new StatVMFactory(getActivity().getApplication(), collectionsType)).get(StatVM.class);
+        binding.rView.setLayoutManager(gridLayoutManager);
+        rvModel = viewModelProvider.get(StatVM.class);
         for (LiveData<StatModel> statModelLiveData : rvModel.getStatModelsLD()) {
             statModelLiveData.observe(getViewLifecycleOwner(), model -> {
                 statisticAdapter.notifyItemChanged(rvModel.getStatModelsLD().indexOf(statModelLiveData));
@@ -97,18 +103,13 @@ public class VPFragment extends Fragment{
         return v -> {
             String amountData = binding.inElementsAmount.getText().toString();
             if (amountData.trim().isEmpty()) {
-                Interpolator cycleInterpolator = new CycleInterpolator(7);
-                Animation shake = new TranslateAnimation(-10, 10, 0, 0);
-                shake.setDuration(50);
-                shake.setInterpolator(cycleInterpolator);
                 binding.til.requestFocus();
                 binding.til.startAnimation(shake);
                 return;
             }
             try {
                 keyboardSource.hideKeyboard(v);
-                int collectionSize = new ViewModelProvider(getActivity()).get(SharedCollSizeVM.class).getCollectionSize();
-                rvModel.startBenchmark(collectionSize, Integer.parseInt(amountData));
+                rvModel.startBenchmark(sharedCollSizeVM.get().getCollectionSize(), Integer.parseInt(amountData));
             } catch (NumberFormatException e) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setMessage(getText(R.string.alert_need_number));
@@ -117,6 +118,17 @@ public class VPFragment extends Fragment{
                 Log.e(this.getClass().getCanonicalName(), "Benchmark start error - " + e.getMessage());
             }
         };
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        ((InitApp) getActivity().getApplication()).getAppComponent().VPFragmentComponentBuilder()
+                .collectionType((CollectionsType) getArguments().getSerializable(COLL_TYPE_KEY))
+                .VPFragment(this)
+                .build()
+                .inject(this);
+
     }
 
     @Override

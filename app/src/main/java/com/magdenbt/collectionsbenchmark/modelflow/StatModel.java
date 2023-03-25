@@ -1,9 +1,13 @@
-package com.magdenbt.collectionsbenchmark;
+package com.magdenbt.collectionsbenchmark.modelflow;
 
 import android.content.Context;
 import android.view.View;
 
 import androidx.lifecycle.Observer;
+
+import com.magdenbt.collectionsbenchmark.OperationBenchmark;
+import com.magdenbt.collectionsbenchmark.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;

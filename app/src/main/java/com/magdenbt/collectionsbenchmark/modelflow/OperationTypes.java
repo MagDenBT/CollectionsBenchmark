@@ -1,4 +1,6 @@
-package com.magdenbt.collectionsbenchmark;
+package com.magdenbt.collectionsbenchmark.modelflow;
+
+import com.magdenbt.collectionsbenchmark.CollectionsType;
 
 public enum OperationTypes {
     ARRAY_LIST_ADDING_IN_THE_BEGINNING(CollectionsType.LIST),

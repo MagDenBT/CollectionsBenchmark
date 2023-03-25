@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.UI.main;
+package com.magdenbt.collectionsbenchmark.UI.ViewFlow;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,8 +13,17 @@ import com.magdenbt.collectionsbenchmark.R;
 import com.magdenbt.collectionsbenchmark.UI.KeyboardSource;
 import com.magdenbt.collectionsbenchmark.databinding.DialogCollectionSizeBinding;
 
+import javax.inject.Inject;
+
 public class DialogCollectionSize extends DialogFragment {
-    private KeyboardSource keyboardSource;
+
+   @Inject public KeyboardSource keyboardSource;
+
+
+    @Inject
+    public DialogCollectionSize() {
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,7 +35,6 @@ public class DialogCollectionSize extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         DialogCollectionSizeBinding binding = DialogCollectionSizeBinding.inflate(inflater, container, false);
-        keyboardSource = new KeyboardSource(getContext());
         binding.inCollectionSize.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE){
                 keyboardSource.hideKeyboard(v);

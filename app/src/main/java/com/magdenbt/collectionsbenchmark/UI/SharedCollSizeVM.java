@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.UI.main;
+package com.magdenbt.collectionsbenchmark.UI;
 
 import androidx.lifecycle.ViewModel;
 

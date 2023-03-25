@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.UI.main;
+package com.magdenbt.collectionsbenchmark.UI.ViewFlow;
 
 
 import androidx.annotation.NonNull;
@@ -8,8 +8,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.magdenbt.collectionsbenchmark.CollectionsType;
 
+import javax.inject.Inject;
+
 public class VPAdapter extends FragmentStateAdapter{
 
+    @Inject
     public VPAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
@@ -25,6 +28,10 @@ public class VPAdapter extends FragmentStateAdapter{
         }
         return new VPFragment(collectionsType);
     }
+
+
+
+
 
     @Override
     public int getItemCount() {
