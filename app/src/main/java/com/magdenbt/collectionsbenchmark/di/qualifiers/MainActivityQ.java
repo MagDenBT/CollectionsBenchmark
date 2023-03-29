@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.di.Qualifiers;
+package com.magdenbt.collectionsbenchmark.di.qualifiers;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

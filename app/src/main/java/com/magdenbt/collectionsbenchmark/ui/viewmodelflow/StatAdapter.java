@@ -1,4 +1,5 @@
-package com.magdenbt.collectionsbenchmark.UI.ViewModelFlow;
+package com.magdenbt.collectionsbenchmark.ui.viewmodelflow;
+
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -14,13 +15,10 @@ import com.magdenbt.collectionsbenchmark.R;
 import com.magdenbt.collectionsbenchmark.modelflow.StatModel;
 import com.magdenbt.collectionsbenchmark.databinding.StatItemBinding;
 
-import javax.inject.Inject;
+
+public class StatAdapter extends ListAdapter<LiveData<StatModel>, StatAdapter.ViewHolder> {
 
 
-public class StatAdapter extends ListAdapter<LiveData<StatModel>, StatAdapter.ViewHolder>{
-
-
-    @Inject
     public StatAdapter(@NonNull DiffUtil.ItemCallback<LiveData<StatModel>> itemCallback) {
         super(itemCallback);
     }
@@ -35,18 +33,18 @@ public class StatAdapter extends ListAdapter<LiveData<StatModel>, StatAdapter.Vi
 
     @Override
     public void onBindViewHolder(StatAdapter.ViewHolder holder, int position) {
-       holder.bind(getItem(position));
+        holder.bind(getItem(position));
     }
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         StatItemBinding binding;
 
-        ViewHolder(StatItemBinding binding){
+        ViewHolder(StatItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
-        public void bind(LiveData<StatModel> ldStatisticModel){
+
+        public void bind(LiveData<StatModel> ldStatisticModel) {
             binding.setLdStatModel(ldStatisticModel);
         }
     }

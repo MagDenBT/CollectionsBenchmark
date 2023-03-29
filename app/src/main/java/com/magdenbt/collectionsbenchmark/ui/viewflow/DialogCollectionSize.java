@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.UI.ViewFlow;
+package com.magdenbt.collectionsbenchmark.ui.viewflow;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,14 +10,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.magdenbt.collectionsbenchmark.R;
-import com.magdenbt.collectionsbenchmark.UI.KeyboardSource;
+import com.magdenbt.collectionsbenchmark.ui.KeyboardSource;
 import com.magdenbt.collectionsbenchmark.databinding.DialogCollectionSizeBinding;
 
 import javax.inject.Inject;
 
 public class DialogCollectionSize extends DialogFragment {
 
-   @Inject public KeyboardSource keyboardSource;
+    @Inject
+    public KeyboardSource keyboardSource;
 
 
     @Inject
@@ -32,29 +33,28 @@ public class DialogCollectionSize extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         DialogCollectionSizeBinding binding = DialogCollectionSizeBinding.inflate(inflater, container, false);
         binding.inCollectionSize.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE){
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
                 keyboardSource.hideKeyboard(v);
                 return true;
             }
             return false;
         });
         binding.bCalculate.setOnClickListener((v) -> {
-        try {
-            String collSizeData = binding.inCollectionSize.getText().toString().trim();
-            if (!collSizeData.isEmpty()) sendMessage(Integer.parseInt(collSizeData));
-        } catch (NullPointerException e) {
-            binding.inCollectionSize.requestFocus();
-            binding.inCollectionSize.setError(v.getContext().getText(R.string.input_dialog_elements_amount_error), getResources().getDrawable(R.drawable.exclamation_mark, getContext().getTheme()));
-        }
+            try {
+                String collSizeData = binding.inCollectionSize.getText().toString().trim();
+                if (!collSizeData.isEmpty()) sendMessage(Integer.parseInt(collSizeData));
+            } catch (NullPointerException e) {
+                binding.inCollectionSize.requestFocus();
+                binding.inCollectionSize.setError(v.getContext().getText(R.string.input_dialog_elements_amount_error), getResources().getDrawable(R.drawable.exclamation_mark, getContext().getTheme()));
+            }
         });
         return binding.getRoot();
     }
 
-    private void sendMessage(int collectionSize){
+    private void sendMessage(int collectionSize) {
         Bundle bundle = new Bundle();
         bundle.putInt(MainActivity.COLL_SIZE_REQ_KEY, collectionSize);
         getParentFragmentManager().setFragmentResult(MainActivity.COLL_SIZE_REQ_KEY, bundle);

@@ -18,7 +18,6 @@ public class OperationBenchmark {
         return Single.create(emitter -> emitter.onSuccess(calculateDuration(sizeCollection, elementsAmount, operationType)));
     }
 
-
     private static long calculateDuration(int sizeCollection, int elementsAmount, OperationTypes operationType) {
 
         switch (operationType) {
@@ -113,7 +112,6 @@ public class OperationBenchmark {
         }
     }
 
-
     private static HashMap<Integer, Integer> createHashMap(int sizeCollection) {
         HashMap<Integer, Integer> hashMap = new HashMap<>();
         for (int i = 0; i < sizeCollection; i++) {
@@ -154,7 +152,6 @@ public class OperationBenchmark {
         }
         return linkedList;
     }
-
 
     private static long removingEndCopyOnWriteArrayList(int sizeCollection, int elementsAmount) {
         CopyOnWriteArrayList<Integer> ob = createCopyOnWriteArrayList(sizeCollection);

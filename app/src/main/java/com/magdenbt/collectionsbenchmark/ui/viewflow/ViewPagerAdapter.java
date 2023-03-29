@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.UI.ViewFlow;
+package com.magdenbt.collectionsbenchmark.ui.viewflow;
 
 
 import androidx.annotation.NonNull;
@@ -10,10 +10,10 @@ import com.magdenbt.collectionsbenchmark.CollectionsType;
 
 import javax.inject.Inject;
 
-public class VPAdapter extends FragmentStateAdapter{
+public class ViewPagerAdapter extends FragmentStateAdapter{
 
     @Inject
-    public VPAdapter(@NonNull FragmentActivity fragmentActivity) {
+    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
 
@@ -26,7 +26,7 @@ public class VPAdapter extends FragmentStateAdapter{
         }else {
             collectionsType = CollectionsType.MAP;
         }
-        return new VPFragment(collectionsType);
+        return new ViewPagerFragment(collectionsType);
     }
 
 

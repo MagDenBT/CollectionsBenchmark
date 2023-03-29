@@ -3,9 +3,8 @@ package com.magdenbt.collectionsbenchmark.di;
 import android.app.Application;
 import android.content.Context;
 
-
-import com.magdenbt.collectionsbenchmark.di.Fragments.VPFragmentComponent;
-import com.magdenbt.collectionsbenchmark.di.MainActivity.MainComponent;
+import com.magdenbt.collectionsbenchmark.di.fragments.ViewPagerFragmentComponent;
+import com.magdenbt.collectionsbenchmark.di.mainactivity.MainComponent;
 
 import javax.inject.Singleton;
 
@@ -18,11 +17,12 @@ import dagger.Component;
 public interface AppComponent {
 
     @Component.Factory
-    interface Factory{
+    interface Factory {
         AppComponent create(@BindsInstance Context context, @BindsInstance Application application);
     }
 
     MainComponent.Factory mainComponent();
-    VPFragmentComponent.Builder VPFragmentComponentBuilder();
+
+    ViewPagerFragmentComponent.Builder VPFragmentComponentBuilder();
 
 }

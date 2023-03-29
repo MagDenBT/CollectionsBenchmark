@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.UI.ViewModelFlow;
+package com.magdenbt.collectionsbenchmark.ui.viewmodelflow;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -6,11 +6,9 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import com.magdenbt.collectionsbenchmark.modelflow.StatModel;
 
-import javax.inject.Inject;
 
 public class StatDiffCallback extends DiffUtil.ItemCallback<LiveData<StatModel>> {
 
-    @Inject
     public StatDiffCallback() {
     }
 

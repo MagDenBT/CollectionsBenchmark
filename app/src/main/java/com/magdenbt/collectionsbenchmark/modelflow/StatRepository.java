@@ -11,26 +11,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class StatRepository {
 
     private final Context context;
 
+    @Inject
     public StatRepository(Context context) {
         this.context = context;
     }
 
-    public List<LiveData<StatModel>> getModels(CollectionsType collectionsType){
+    public List<LiveData<StatModel>> getModels(CollectionsType collectionsType) {
 
-        ArrayList<LiveData<StatModel>> models =  new ArrayList<>();
-        for (OperationTypes operationType: OperationTypes.values()
-        ) {
-            if(operationType.collectionsType == collectionsType){
+        ArrayList<LiveData<StatModel>> models = new ArrayList<>();
+        for (OperationTypes operationType : OperationTypes.values()) {
+            if (operationType.collectionsType == collectionsType) {
                 MutableLiveData<StatModel> mutableLiveData = new MutableLiveData<>();
-                mutableLiveData.setValue(new StatModel(context,operationType, mutableLiveData::setValue));
+                mutableLiveData.setValue(new StatModel(context, operationType, mutableLiveData::setValue));
                 models.add(mutableLiveData);
             }
         }
-        return  Collections.unmodifiableList(models);
+        return Collections.unmodifiableList(models);
     }
 
 }

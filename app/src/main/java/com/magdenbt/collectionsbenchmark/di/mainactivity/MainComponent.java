@@ -1,8 +1,8 @@
-package com.magdenbt.collectionsbenchmark.di.MainActivity;
+package com.magdenbt.collectionsbenchmark.di.mainactivity;
 
 
 
-import com.magdenbt.collectionsbenchmark.UI.ViewFlow.MainActivity;
+import com.magdenbt.collectionsbenchmark.ui.viewflow.MainActivity;
 
 import dagger.BindsInstance;
 import dagger.Subcomponent;

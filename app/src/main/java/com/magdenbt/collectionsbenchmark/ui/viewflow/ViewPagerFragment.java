@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.UI.ViewFlow;
+package com.magdenbt.collectionsbenchmark.ui.viewflow;
 
 import android.app.AlertDialog;
 
@@ -20,43 +20,46 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 
 import com.magdenbt.collectionsbenchmark.CollectionsType;
 import com.magdenbt.collectionsbenchmark.InitApp;
 import com.magdenbt.collectionsbenchmark.R;
+import com.magdenbt.collectionsbenchmark.di.qualifiers.ViewPagerFragmentQ;
 import com.magdenbt.collectionsbenchmark.modelflow.StatModel;
-import com.magdenbt.collectionsbenchmark.UI.KeyboardSource;
-import com.magdenbt.collectionsbenchmark.UI.SharedCollSizeVM;
-import com.magdenbt.collectionsbenchmark.UI.ViewModelFlow.StatVM;
-import com.magdenbt.collectionsbenchmark.UI.ViewModelFlow.StatAdapter;
+import com.magdenbt.collectionsbenchmark.ui.KeyboardSource;
+import com.magdenbt.collectionsbenchmark.ui.SharedCollSizeViewModel;
+import com.magdenbt.collectionsbenchmark.ui.viewmodelflow.StatDiffCallback;
+import com.magdenbt.collectionsbenchmark.ui.viewmodelflow.StatViewModel;
+import com.magdenbt.collectionsbenchmark.ui.viewmodelflow.StatAdapter;
 import com.magdenbt.collectionsbenchmark.databinding.FragmentBodyBinding;
-import com.magdenbt.collectionsbenchmark.di.Qualifiers.VPFragmentQ;
 
 import javax.inject.Inject;
 
 import dagger.Lazy;
 
-public class VPFragment extends Fragment{
+public class ViewPagerFragment extends Fragment {
 
     private FragmentBodyBinding binding;
-    private StatVM rvModel;
+    private StatViewModel rvModel;
     private final String COLL_TYPE_KEY = "collectionsType";
-    @Inject public KeyboardSource keyboardSource;
-    @Inject public StatAdapter statisticAdapter;
-    @Inject public ViewModelProvider viewModelProvider;
-    @Inject public GridLayoutManager gridLayoutManager;
-    @Inject public Animation shake;
-    @VPFragmentQ
-    @Inject public Lazy<SharedCollSizeVM> sharedCollSizeVM;
+    @Inject
+    public KeyboardSource keyboardSource;
+    @Inject
+    public ViewModelProvider viewModelProvider;
+    @ViewPagerFragmentQ
+    @Inject
+    public Lazy<SharedCollSizeViewModel> sharedCollSizeVM;
 
 
-
-    public VPFragment() {
+    public ViewPagerFragment() {
         super();
     }
 
-    public VPFragment(CollectionsType collectionsType) {
+    public ViewPagerFragment(CollectionsType collectionsType) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(COLL_TYPE_KEY, collectionsType);
         setArguments(bundle);
@@ -68,8 +71,7 @@ public class VPFragment extends Fragment{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentBodyBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -78,7 +80,7 @@ public class VPFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         setRView();
         binding.inElementsAmount.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_NEXT){
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
                 keyboardSource.hideKeyboard(v);
                 return true;
             }
@@ -88,15 +90,24 @@ public class VPFragment extends Fragment{
     }
 
     private void setRView() {
-        binding.rView.setLayoutManager(gridLayoutManager);
-        rvModel = viewModelProvider.get(StatVM.class);
+        int columnAmount;
+        try {
+            columnAmount = getArguments().getSerializable(COLL_TYPE_KEY) == CollectionsType.LIST ? 3 : 2;
+        } catch (NullPointerException e) {
+            Log.e(this.getClass().getCanonicalName(), "Failed to get CollectionsType");
+            columnAmount = 3;
+        }
+
+        binding.rView.setLayoutManager(new GridLayoutManager(getContext(), columnAmount));
+        StatAdapter statAdapter = new StatAdapter(new StatDiffCallback());
+        rvModel = viewModelProvider.get(StatViewModel.class);
         for (LiveData<StatModel> statModelLiveData : rvModel.getStatModelsLD()) {
             statModelLiveData.observe(getViewLifecycleOwner(), model -> {
-                statisticAdapter.notifyItemChanged(rvModel.getStatModelsLD().indexOf(statModelLiveData));
+                statAdapter.notifyItemChanged(rvModel.getStatModelsLD().indexOf(statModelLiveData));
             });
         }
-        statisticAdapter.submitList(rvModel.getStatModelsLD());
-        binding.rView.setAdapter(statisticAdapter);
+        statAdapter.submitList(rvModel.getStatModelsLD());
+        binding.rView.setAdapter(statAdapter);
     }
 
     private View.OnClickListener getStartButtonListener() {
@@ -104,7 +115,7 @@ public class VPFragment extends Fragment{
             String amountData = binding.inElementsAmount.getText().toString();
             if (amountData.trim().isEmpty()) {
                 binding.til.requestFocus();
-                binding.til.startAnimation(shake);
+                binding.til.startAnimation(getTilErrorAnimation());
                 return;
             }
             try {
@@ -120,14 +131,19 @@ public class VPFragment extends Fragment{
         };
     }
 
+    @NonNull
+    private Animation getTilErrorAnimation() {
+        Interpolator cycleInterpolator = new CycleInterpolator(7);
+        Animation shake = new TranslateAnimation(-10, 10, 0, 0);
+        shake.setDuration(50);
+        shake.setInterpolator(cycleInterpolator);
+        return shake;
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        ((InitApp) getActivity().getApplication()).getAppComponent().VPFragmentComponentBuilder()
-                .collectionType((CollectionsType) getArguments().getSerializable(COLL_TYPE_KEY))
-                .VPFragment(this)
-                .build()
-                .inject(this);
+        ((InitApp) getActivity().getApplication()).getAppComponent().VPFragmentComponentBuilder().collectionType((CollectionsType) getArguments().getSerializable(COLL_TYPE_KEY)).VPFragment(this).build().inject(this);
 
     }
 

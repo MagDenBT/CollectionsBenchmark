@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.UI;
+package com.magdenbt.collectionsbenchmark.ui;
 
 import android.content.Context;
 import android.view.View;
