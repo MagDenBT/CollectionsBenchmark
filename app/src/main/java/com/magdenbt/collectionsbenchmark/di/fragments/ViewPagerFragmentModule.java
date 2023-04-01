@@ -1,7 +1,6 @@
 package com.magdenbt.collectionsbenchmark.di.fragments;
 
 import android.app.Application;
-import android.content.Context;
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
