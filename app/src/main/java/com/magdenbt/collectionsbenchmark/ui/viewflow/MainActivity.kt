@@ -30,20 +30,23 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportFragmentManager.setFragmentResultListener(COLL_SIZE_REQ_KEY,this, {requestKey, result -> sharedCollSizeVM.setCollectionsSize(result.getInt(
-            COLL_SIZE_REQ_KEY))})
+        supportFragmentManager.setFragmentResultListener(COLL_SIZE_REQ_KEY,this) { _, result ->
+            sharedCollSizeVM.collectionSize = result.getInt(
+                COLL_SIZE_REQ_KEY
+            )
+        }
 
         if(sharedCollSizeVM.collectionSize == 0){
             dialogCollectionSize.get().isCancelable = false
             dialogCollectionSize.get().show(supportFragmentManager, "SomeTag")
         }
         binding.pager.adapter = viewPagerAdapter
-        TabLayoutMediator(binding.tab,binding.pager, {tab, position ->
-            when(position) {
+        TabLayoutMediator(binding.tab,binding.pager) { tab, position ->
+            when (position) {
                 0 -> tab.text = getText(R.string.tab_collections)
                 1 -> tab.text = getText(R.string.tab_maps)
             }
 
-        }).attach()
+        }.attach()
     }
 }

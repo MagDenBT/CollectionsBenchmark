@@ -76,7 +76,6 @@ class ViewPagerFragment constructor() : Fragment() {
             return@OnEditorActionListener false
         })
         binding!!.bStartStop.setOnClickListener { v -> startButtonListener(v) }
-//        rvModel = viewModelProvider.get(StatViewModel::class.java)
         setRView()
     }
 
@@ -84,7 +83,10 @@ class ViewPagerFragment constructor() : Fragment() {
         val columnAmount =
             if (arguments?.getSerializable(COLL_TYPE_KEY) == CollectionsType.LIST) 3 else 2
         binding!!.rView.layoutManager = GridLayoutManager(context, columnAmount)
-        val statAdapter = StatAdapter(StatDiffCallback())
+        val statAdapter =
+            StatAdapter(
+                StatDiffCallback()
+            )
         binding!!.rView.adapter = statAdapter
         for (liveData in rvModel.statModelsLD) {
             liveData.observe(viewLifecycleOwner) {

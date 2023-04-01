@@ -1,8 +1,8 @@
-package com.magdenbt.collectionsbenchmark.modelflow;
+package com.magdenbt.collectionsbenchmark.modelflow
 
-import com.magdenbt.collectionsbenchmark.CollectionsType;
+import com.magdenbt.collectionsbenchmark.CollectionsType
 
-public enum OperationTypes {
+enum class OperationTypes constructor(val collectionsType: CollectionsType) {
     ARRAY_LIST_ADDING_IN_THE_BEGINNING(CollectionsType.LIST),
     ARRAY_LIST_ADDING_IN_THE_MIDDLE(CollectionsType.LIST),
     ARRAY_LIST_ADDING_IN_THE_END(CollectionsType.LIST),
@@ -34,10 +34,5 @@ public enum OperationTypes {
     TREE_MAP_ADDING_NEW(CollectionsType.MAP),
     TREE_MAP_SEARCH_BY_KEY(CollectionsType.MAP),
     TREE_MAP_REMOVING(CollectionsType.MAP),
-    ;
 
-    final CollectionsType collectionsType;
-    OperationTypes(CollectionsType collectionType) {
-        this.collectionsType = collectionType;
-    }
 }
