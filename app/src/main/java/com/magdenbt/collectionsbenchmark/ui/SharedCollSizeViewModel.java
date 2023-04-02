@@ -1,10 +1,8 @@
-package com.magdenbt.collectionsbenchmark.UI.main;
+package com.magdenbt.collectionsbenchmark.ui;
 
 import androidx.lifecycle.ViewModel;
 
-import java.util.Objects;
-
-public class SharedCollSizeVM extends ViewModel {
+public class SharedCollSizeViewModel extends ViewModel {
     private int collectionsSize = 0;
 
     public void setCollectionsSize(int collectionsSize){

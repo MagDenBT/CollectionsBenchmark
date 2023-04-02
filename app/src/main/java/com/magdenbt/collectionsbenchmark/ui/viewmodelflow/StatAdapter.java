@@ -1,4 +1,5 @@
-package com.magdenbt.collectionsbenchmark.UI.Stat;
+package com.magdenbt.collectionsbenchmark.ui.viewmodelflow;
+
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -6,17 +7,16 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.magdenbt.collectionsbenchmark.R;
-import com.magdenbt.collectionsbenchmark.StatModel;
+import com.magdenbt.collectionsbenchmark.modelflow.StatModel;
 import com.magdenbt.collectionsbenchmark.databinding.StatItemBinding;
 
 
-public class StatAdapter extends ListAdapter<LiveData<StatModel>, StatAdapter.ViewHolder>{
+public class StatAdapter extends ListAdapter<LiveData<StatModel>, StatAdapter.ViewHolder> {
 
 
     public StatAdapter(@NonNull DiffUtil.ItemCallback<LiveData<StatModel>> itemCallback) {
@@ -33,18 +33,18 @@ public class StatAdapter extends ListAdapter<LiveData<StatModel>, StatAdapter.Vi
 
     @Override
     public void onBindViewHolder(StatAdapter.ViewHolder holder, int position) {
-       holder.bind(getItem(position));
+        holder.bind(getItem(position));
     }
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         StatItemBinding binding;
 
-        ViewHolder(StatItemBinding binding){
+        ViewHolder(StatItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
-        public void bind(LiveData<StatModel> ldStatisticModel){
+
+        public void bind(LiveData<StatModel> ldStatisticModel) {
             binding.setLdStatModel(ldStatisticModel);
         }
     }

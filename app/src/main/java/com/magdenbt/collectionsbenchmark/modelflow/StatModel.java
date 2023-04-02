@@ -1,22 +1,26 @@
-package com.magdenbt.collectionsbenchmark;
+package com.magdenbt.collectionsbenchmark.modelflow;
 
 import android.content.Context;
 import android.view.View;
 
 import androidx.lifecycle.Observer;
+
+import com.magdenbt.collectionsbenchmark.OperationBenchmark;
+import com.magdenbt.collectionsbenchmark.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class StatModel implements SingleObserver<String>  {
-
+public class StatModel implements SingleObserver<String> {
 
     private final OperationTypes operationType;
     private final Observer<StatModel> observer;
@@ -27,8 +31,6 @@ public class StatModel implements SingleObserver<String>  {
     private String duration = "N/A";
 
 
-
-
     public StatModel(Context context, OperationTypes operationType, Observer<StatModel> observer) {
         this.context = context;
         this.operationType = operationType;
@@ -36,8 +38,6 @@ public class StatModel implements SingleObserver<String>  {
 
         setTexts();
     }
-
-
 
     private void setTexts() {
         duration = "N/A";
@@ -170,8 +170,7 @@ public class StatModel implements SingleObserver<String>  {
         return prefix + " " + collectionType + " " + duration + " ms";
     }
 
-
-    public void startBenchmark(int sizeCollection, int amountElements){
+    public void startBenchmark(int sizeCollection, int amountElements) {
         OperationBenchmark.createOb(sizeCollection, amountElements, operationType).
                 observeOn(AndroidSchedulers.mainThread()).
                 subscribeOn(Schedulers.single()).

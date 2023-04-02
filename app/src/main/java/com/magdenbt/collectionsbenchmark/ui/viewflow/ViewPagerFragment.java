@@ -1,7 +1,8 @@
-package com.magdenbt.collectionsbenchmark.UI.main;
+package com.magdenbt.collectionsbenchmark.ui.viewflow;
 
 import android.app.AlertDialog;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,27 +26,40 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 
 import com.magdenbt.collectionsbenchmark.CollectionsType;
+import com.magdenbt.collectionsbenchmark.InitApp;
 import com.magdenbt.collectionsbenchmark.R;
-import com.magdenbt.collectionsbenchmark.StatModel;
-import com.magdenbt.collectionsbenchmark.UI.KeyboardSource;
-import com.magdenbt.collectionsbenchmark.UI.Stat.StatVM;
-import com.magdenbt.collectionsbenchmark.UI.Stat.StatDiffCallback;
-import com.magdenbt.collectionsbenchmark.UI.Stat.StatVMFactory;
-import com.magdenbt.collectionsbenchmark.UI.Stat.StatAdapter;
+import com.magdenbt.collectionsbenchmark.di.qualifiers.ViewPagerFragmentQ;
+import com.magdenbt.collectionsbenchmark.modelflow.StatModel;
+import com.magdenbt.collectionsbenchmark.ui.KeyboardSource;
+import com.magdenbt.collectionsbenchmark.ui.SharedCollSizeViewModel;
+import com.magdenbt.collectionsbenchmark.ui.viewmodelflow.StatDiffCallback;
+import com.magdenbt.collectionsbenchmark.ui.viewmodelflow.StatViewModel;
+import com.magdenbt.collectionsbenchmark.ui.viewmodelflow.StatAdapter;
 import com.magdenbt.collectionsbenchmark.databinding.FragmentBodyBinding;
 
-public class VPFragment extends Fragment{
+import javax.inject.Inject;
+
+import dagger.Lazy;
+
+public class ViewPagerFragment extends Fragment {
 
     private FragmentBodyBinding binding;
-    private StatVM rvModel;
+    private StatViewModel rvModel;
     private final String COLL_TYPE_KEY = "collectionsType";
-    private KeyboardSource keyboardSource;
+    @Inject
+    public KeyboardSource keyboardSource;
+    @Inject
+    public ViewModelProvider viewModelProvider;
+    @ViewPagerFragmentQ
+    @Inject
+    public Lazy<SharedCollSizeViewModel> sharedCollSizeVM;
 
-    public VPFragment() {
+
+    public ViewPagerFragment() {
         super();
     }
 
-    public VPFragment(CollectionsType collectionsType) {
+    public ViewPagerFragment(CollectionsType collectionsType) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(COLL_TYPE_KEY, collectionsType);
         setArguments(bundle);
@@ -57,8 +71,7 @@ public class VPFragment extends Fragment{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentBodyBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -66,9 +79,8 @@ public class VPFragment extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         setRView();
-        keyboardSource = new KeyboardSource(getContext());
         binding.inElementsAmount.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_NEXT){
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
                 keyboardSource.hideKeyboard(v);
                 return true;
             }
@@ -78,37 +90,37 @@ public class VPFragment extends Fragment{
     }
 
     private void setRView() {
-        CollectionsType collectionsType = (CollectionsType) getArguments().getSerializable(COLL_TYPE_KEY);
-        int columnAmount = CollectionsType.LIST == collectionsType ? 3 : 2;
+        int columnAmount;
+        try {
+            columnAmount = getArguments().getSerializable(COLL_TYPE_KEY) == CollectionsType.LIST ? 3 : 2;
+        } catch (NullPointerException e) {
+            Log.e(this.getClass().getCanonicalName(), "Failed to get CollectionsType");
+            columnAmount = 3;
+        }
 
         binding.rView.setLayoutManager(new GridLayoutManager(getContext(), columnAmount));
-        StatAdapter statisticAdapter = new StatAdapter(new StatDiffCallback());
-        rvModel = new ViewModelProvider(this, new StatVMFactory(getActivity().getApplication(), collectionsType)).get(StatVM.class);
+        StatAdapter statAdapter = new StatAdapter(new StatDiffCallback());
+        rvModel = viewModelProvider.get(StatViewModel.class);
         for (LiveData<StatModel> statModelLiveData : rvModel.getStatModelsLD()) {
             statModelLiveData.observe(getViewLifecycleOwner(), model -> {
-                statisticAdapter.notifyItemChanged(rvModel.getStatModelsLD().indexOf(statModelLiveData));
+                statAdapter.notifyItemChanged(rvModel.getStatModelsLD().indexOf(statModelLiveData));
             });
         }
-        statisticAdapter.submitList(rvModel.getStatModelsLD());
-        binding.rView.setAdapter(statisticAdapter);
+        statAdapter.submitList(rvModel.getStatModelsLD());
+        binding.rView.setAdapter(statAdapter);
     }
 
     private View.OnClickListener getStartButtonListener() {
         return v -> {
             String amountData = binding.inElementsAmount.getText().toString();
             if (amountData.trim().isEmpty()) {
-                Interpolator cycleInterpolator = new CycleInterpolator(7);
-                Animation shake = new TranslateAnimation(-10, 10, 0, 0);
-                shake.setDuration(50);
-                shake.setInterpolator(cycleInterpolator);
                 binding.til.requestFocus();
-                binding.til.startAnimation(shake);
+                binding.til.startAnimation(getTilErrorAnimation());
                 return;
             }
             try {
                 keyboardSource.hideKeyboard(v);
-                int collectionSize = new ViewModelProvider(getActivity()).get(SharedCollSizeVM.class).getCollectionSize();
-                rvModel.startBenchmark(collectionSize, Integer.parseInt(amountData));
+                rvModel.startBenchmark(sharedCollSizeVM.get().getCollectionSize(), Integer.parseInt(amountData));
             } catch (NumberFormatException e) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setMessage(getText(R.string.alert_need_number));
@@ -117,6 +129,22 @@ public class VPFragment extends Fragment{
                 Log.e(this.getClass().getCanonicalName(), "Benchmark start error - " + e.getMessage());
             }
         };
+    }
+
+    @NonNull
+    private Animation getTilErrorAnimation() {
+        Interpolator cycleInterpolator = new CycleInterpolator(7);
+        Animation shake = new TranslateAnimation(-10, 10, 0, 0);
+        shake.setDuration(50);
+        shake.setInterpolator(cycleInterpolator);
+        return shake;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        ((InitApp) getActivity().getApplication()).getAppComponent().VPFragmentComponentBuilder().collectionType((CollectionsType) getArguments().getSerializable(COLL_TYPE_KEY)).VPFragment(this).build().inject(this);
+
     }
 
     @Override

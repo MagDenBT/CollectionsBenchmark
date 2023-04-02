@@ -1,5 +1,7 @@
 package com.magdenbt.collectionsbenchmark;
 
+import com.magdenbt.collectionsbenchmark.modelflow.OperationTypes;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -15,7 +17,6 @@ public class OperationBenchmark {
     public static Single<Long> createOb(int sizeCollection, int elementsAmount, OperationTypes operationType) {
         return Single.create(emitter -> emitter.onSuccess(calculateDuration(sizeCollection, elementsAmount, operationType)));
     }
-
 
     private static long calculateDuration(int sizeCollection, int elementsAmount, OperationTypes operationType) {
 
@@ -111,7 +112,6 @@ public class OperationBenchmark {
         }
     }
 
-
     private static HashMap<Integer, Integer> createHashMap(int sizeCollection) {
         HashMap<Integer, Integer> hashMap = new HashMap<>();
         for (int i = 0; i < sizeCollection; i++) {
@@ -153,13 +153,15 @@ public class OperationBenchmark {
         return linkedList;
     }
 
-
     private static long removingEndCopyOnWriteArrayList(int sizeCollection, int elementsAmount) {
         CopyOnWriteArrayList<Integer> ob = createCopyOnWriteArrayList(sizeCollection);
         int targetInd = sizeCollection - 1;
+
         long start = System.currentTimeMillis();
-        for (; targetInd >= elementsAmount; targetInd--) {
+        while (targetInd > 0 && elementsAmount > 0 ){
             ob.remove(targetInd);
+            targetInd--;
+            elementsAmount--;
         }
         long end = System.currentTimeMillis();
 
@@ -169,24 +171,27 @@ public class OperationBenchmark {
 
     private static long removingMiddleCopyOnWriteArrayList(int sizeCollection, int elementsAmount) {
         CopyOnWriteArrayList<Integer> ob = createCopyOnWriteArrayList(sizeCollection);
-        int targetInd = (sizeCollection - 1) / 2;
         long start = System.currentTimeMillis();
-        for (; targetInd <= elementsAmount; targetInd++) {
-            ob.remove(targetInd);
+        while (sizeCollection > 0 && elementsAmount > 0){
+            int middleInd = sizeCollection / 2 - 1;
+            if(middleInd < 0) middleInd = 0;
+            ob.remove(middleInd);
+            sizeCollection--;
+            elementsAmount--;
         }
         long end = System.currentTimeMillis();
-
         return end - start;
     }
 
     private static long removingBeginningCopyOnWriteArrayList(int sizeCollection, int elementsAmount) {
         CopyOnWriteArrayList<Integer> ob = createCopyOnWriteArrayList(sizeCollection);
         long start = System.currentTimeMillis();
-        for (int i = 0; i < elementsAmount; i++) {
-            ob.remove(i);
+        while (sizeCollection > 0 && elementsAmount > 0){
+            ob.remove(0);
+            sizeCollection--;
+            elementsAmount--;
         }
         long end = System.currentTimeMillis();
-
         return end - start;
     }
 
@@ -205,8 +210,10 @@ public class OperationBenchmark {
     private static long addingEndCopyOnWriteArrayList(int sizeCollection, int elementsAmount) {
         CopyOnWriteArrayList<Integer> ob = createCopyOnWriteArrayList(sizeCollection);
         Integer value = 0;
+        int newSize = sizeCollection + elementsAmount;
+
         long start = System.currentTimeMillis();
-        for (int i = sizeCollection - 1; i < elementsAmount; i++) {
+        for (int i = sizeCollection; i < newSize; i++) {
             ob.add(i, value);
         }
         long end = System.currentTimeMillis();
@@ -243,9 +250,12 @@ public class OperationBenchmark {
     private static long removingEndLinkedList(int sizeCollection, int elementsAmount) {
         LinkedList<Integer> ob = createLinkedList(sizeCollection);
         int targetInd = sizeCollection - 1;
+
         long start = System.currentTimeMillis();
-        for (; targetInd >= elementsAmount; targetInd--) {
+        while (targetInd > 0 && elementsAmount > 0 ){
             ob.remove(targetInd);
+            targetInd--;
+            elementsAmount--;
         }
         long end = System.currentTimeMillis();
 
@@ -254,27 +264,28 @@ public class OperationBenchmark {
 
     private static long removingMiddleLinkedList(int sizeCollection, int elementsAmount) {
         LinkedList<Integer> ob = createLinkedList(sizeCollection);
-        int targetInd = (sizeCollection - 1) / 2;
         long start = System.currentTimeMillis();
-        for (; targetInd <= elementsAmount; targetInd++) {
-            ob.remove(targetInd);
+        while (sizeCollection > 0 && elementsAmount > 0){
+            int middleInd = sizeCollection / 2 - 1;
+            if(middleInd < 0) middleInd = 0;
+            ob.remove(middleInd);
+            sizeCollection--;
+            elementsAmount--;
         }
         long end = System.currentTimeMillis();
-
         return end - start;
-
     }
 
     private static long removingBeginningLinkedList(int sizeCollection, int elementsAmount) {
         LinkedList<Integer> ob = createLinkedList(sizeCollection);
         long start = System.currentTimeMillis();
-        for (int i = 0; i < elementsAmount; i++) {
-            ob.remove(i);
+        while (sizeCollection > 0 && elementsAmount > 0){
+            ob.remove(0);
+            sizeCollection--;
+            elementsAmount--;
         }
         long end = System.currentTimeMillis();
-
         return end - start;
-
     }
 
     private static long searchByValueLinkedList(int sizeCollection, int elementsAmount) {
@@ -292,14 +303,15 @@ public class OperationBenchmark {
     private static long addingEndLinkedList(int sizeCollection, int elementsAmount) {
         LinkedList<Integer> ob = createLinkedList(sizeCollection);
         Integer value = 0;
+        int newSize = sizeCollection + elementsAmount;
+
         long start = System.currentTimeMillis();
-        for (int i = sizeCollection - 1; i < elementsAmount; i++) {
+        for (int i = sizeCollection; i < newSize; i++) {
             ob.add(i, value);
         }
         long end = System.currentTimeMillis();
 
         return end - start;
-
     }
 
     private static long addingMiddleLinkedList(int sizeCollection, int elementsAmount) {
@@ -333,37 +345,41 @@ public class OperationBenchmark {
     private static long removingEndArrayList(int sizeCollection, int elementsAmount) {
         ArrayList<Integer> ob = createArrayList(sizeCollection);
         int targetInd = sizeCollection - 1;
+
         long start = System.currentTimeMillis();
-        for (; targetInd >= elementsAmount; targetInd--) {
+        while (targetInd > 0 && elementsAmount > 0 ){
             ob.remove(targetInd);
+            targetInd--;
+            elementsAmount--;
         }
         long end = System.currentTimeMillis();
 
         return end - start;
-
     }
 
     private static long removingMiddleArrayList(int sizeCollection, int elementsAmount) {
         ArrayList<Integer> ob = createArrayList(sizeCollection);
-        int targetInd = (sizeCollection - 1) / 2;
         long start = System.currentTimeMillis();
-        for (; targetInd <= elementsAmount; targetInd++) {
-            ob.remove(targetInd);
+        while (sizeCollection > 0 && elementsAmount > 0){
+            int middleInd = sizeCollection / 2 - 1;
+            if(middleInd < 0) middleInd = 0;
+            ob.remove(middleInd);
+            sizeCollection--;
+            elementsAmount--;
         }
         long end = System.currentTimeMillis();
-
         return end - start;
-
     }
 
     private static long removingBeginningArrayList(int sizeCollection, int elementsAmount) {
         ArrayList<Integer> ob = createArrayList(sizeCollection);
         long start = System.currentTimeMillis();
-        for (int i = 0; i < elementsAmount; i++) {
-            ob.remove(i);
+        while (sizeCollection > 0 && elementsAmount > 0){
+            ob.remove(0);
+            sizeCollection--;
+            elementsAmount--;
         }
         long end = System.currentTimeMillis();
-
         return end - start;
     }
 
@@ -382,8 +398,10 @@ public class OperationBenchmark {
     private static long addingEndArrayList(int sizeCollection, int elementsAmount) {
         ArrayList<Integer> ob = createArrayList(sizeCollection);
         Integer value = 0;
+        int newSize = sizeCollection + elementsAmount;
+
         long start = System.currentTimeMillis();
-        for (int i = sizeCollection - 1; i < elementsAmount; i++) {
+        for (int i = sizeCollection; i < newSize; i++) {
             ob.add(i, value);
         }
         long end = System.currentTimeMillis();
@@ -421,7 +439,7 @@ public class OperationBenchmark {
     private static long removingHashMap(int sizeCollection, int elementsAmount) {
         HashMap<Integer, Integer> ob = createHashMap(sizeCollection);
         long start = System.currentTimeMillis();
-        for (int i = 0; i < elementsAmount; i++) {
+        for (int i = 0; i < elementsAmount && i < sizeCollection; i++) {
             ob.remove(i);
         }
         long end = System.currentTimeMillis();
@@ -444,8 +462,10 @@ public class OperationBenchmark {
     private static long addingHashMap(int sizeCollection, int elementsAmount) {
         HashMap<Integer, Integer> ob = createHashMap(sizeCollection);
         Integer targetValue = 0;
+        int newSize = sizeCollection + elementsAmount;
+
         long start = System.currentTimeMillis();
-        for (int i = sizeCollection - 1; i < elementsAmount; i++) {
+        for (int i = sizeCollection; i < newSize; i++) {
             ob.put(i, targetValue);
         }
         long end = System.currentTimeMillis();
@@ -456,7 +476,7 @@ public class OperationBenchmark {
     private static long removingTreeMap(int sizeCollection, int elementsAmount) {
         TreeMap<Integer, Integer> ob = createTreeMap(sizeCollection);
         long start = System.currentTimeMillis();
-        for (int i = 0; i < elementsAmount; i++) {
+        for (int i = 0; i < elementsAmount && i < sizeCollection; i++) {
             ob.remove(i);
         }
         long end = System.currentTimeMillis();
@@ -479,8 +499,10 @@ public class OperationBenchmark {
     private static long addingTreeMap(int sizeCollection, int elementsAmount) {
         TreeMap<Integer, Integer> ob = createTreeMap(sizeCollection);
         Integer targetValue = 0;
+        int newSize = sizeCollection + elementsAmount;
+
         long start = System.currentTimeMillis();
-        for (int i = sizeCollection - 1; i < elementsAmount; i++) {
+        for (int i = sizeCollection; i < newSize; i++) {
             ob.put(i, targetValue);
         }
         long end = System.currentTimeMillis();
