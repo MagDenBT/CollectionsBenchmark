@@ -5,9 +5,6 @@ import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 
 import com.magdenbt.collectionsbenchmark.R;
-import com.magdenbt.collectionsbenchmark.UI.main.DialogCollectionSize;
-import com.magdenbt.collectionsbenchmark.UI.main.SharedCollSizeVM;
-import com.magdenbt.collectionsbenchmark.UI.main.VPAdapter;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.magdenbt.collectionsbenchmark.databinding.ActivityMainBinding;
 
