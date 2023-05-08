@@ -12,9 +12,9 @@ class OperationBenchmark {
         fun createOb(
             sizeCollection: Int, elementsAmount: Int, operationType: OperationTypes
         ): Single<Long> {
-            return Single.create {
-                calculateDuration(
-                    sizeCollection, elementsAmount, operationType
+            return Single.create { emitter ->
+                emitter.onSuccess(calculateDuration(
+                    sizeCollection, elementsAmount, operationType)
                 )
             }
         }
