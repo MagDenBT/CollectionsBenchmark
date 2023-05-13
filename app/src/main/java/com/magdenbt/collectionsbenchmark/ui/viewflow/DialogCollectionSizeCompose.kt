@@ -1,47 +1,69 @@
 package com.magdenbt.collectionsbenchmark.ui.viewflow
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.magdenbt.collectionsbenchmark.R
 import com.magdenbt.collectionsbenchmark.ui.theme.AppTheme
 import com.magdenbt.collectionsbenchmark.ui.theme.shapes
 
 @Composable
-fun DialogCollectionSizeScreen() {
-    Column(
-        modifier = Modifier
-            .width(375.dp)
-            .padding(start = 30.dp, end = 30.dp, top = 35.dp),
+fun DialogCollectionSizeScreen(calculateAction: (Int) -> Unit) {
+    var inputSize by remember {
+        mutableStateOf("")
+    }
+    ConstraintLayout(
+        Modifier
+            .fillMaxHeight()
+            .padding(horizontal = 30.dp),
     ) {
-        InvitationText(
-            Modifier
-                .width(315.dp)
-                .height(49.dp)
-                .wrapContentHeight(Alignment.CenterVertically),
-        )
+        val (column, button) = createRefs()
+        Column(
+            modifier = Modifier
+                .width(375.dp)
+                .constrainAs(column) { top.linkTo(parent.top, margin = 35.dp) },
+        ) {
+            InvitationText(
+                Modifier
+                    .width(315.dp)
+                    .height(49.dp)
+                    .wrapContentHeight(Alignment.CenterVertically),
+            )
 
-        Spacer(Modifier.height(21.dp))
-        CollectionSizeInput(
-            Modifier
-                .width(315.dp)
-                .height(64.dp),
-        )
+            Spacer(Modifier.height(21.dp))
+            CollectionSizeInput(
+                Modifier
+                    .width(315.dp)
+                    .height(64.dp),
+                value = inputSize,
+                onValueChange = { newValue -> inputSize = newValue },
 
+            )
+        }
         CalculateButton(
             Modifier
                 .width(315.dp)
-                .height(62.dp),
+                .height(62.dp)
+                .constrainAs(button) { bottom.linkTo(parent.bottom, margin = 39.dp) },
+            onClick = { inputSize.toIntOrNull()?.let(calculateAction) },
         )
     }
 }
@@ -57,18 +79,25 @@ fun InvitationText(modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CollectionSizeInput(modifier: Modifier = Modifier) {
+fun CollectionSizeInput(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+) {
     TextField(
         modifier = modifier,
-        value = stringResource(R.string.input_dialog_elements_amount_hint),
-        onValueChange = { /*ToDo*/ },
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(stringResource(R.string.input_dialog_elements_amount_hint)) },
+        textStyle = LocalTextStyle.current.copy(fontSize = 20.sp, lineHeight = 30.sp),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
     )
 }
 
 @Composable
-fun CalculateButton(modifier: Modifier = Modifier) {
+fun CalculateButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     Button(
-        onClick = { /*TODO*/ },
+        onClick = onClick,
         modifier = modifier,
         shape = shapes.extraSmall,
     ) {
@@ -76,10 +105,10 @@ fun CalculateButton(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(widthDp = 375, showBackground = true)
+@Preview(widthDp = 375, heightDp = 796, showBackground = true)
 @Composable
 fun DialogCollectionSizeScreenPrev() {
     AppTheme {
-        DialogCollectionSizeScreen()
+        DialogCollectionSizeScreen({})
     }
 }
