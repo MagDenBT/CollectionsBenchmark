@@ -1,8 +1,8 @@
-plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.kotlin.kapt'
-}
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
+apply from: "$project.rootDir/spotless.gradle"
 
 android {
     namespace 'com.magdenbt.collectionsbenchmark'
@@ -12,8 +12,8 @@ android {
         applicationId "com.magdenbt.collectionsbenchmark"
         minSdk 24
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode globalVersionCode
+        versionName globalVersionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -22,6 +22,10 @@ android {
     buildFeatures {
         dataBinding = true
         viewBinding = true
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.4.4'
     }
 
     buildTypes {
@@ -31,36 +35,55 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
 
         kotlinOptions {
-            jvmTarget = "1.8"
-            freeCompilerArgs += "-Xjvm-default=enable"
+            jvmTarget = "11"
+            freeCompilerArgs = ['-Xjvm-default=all-compatibility']
         }
     }
 
 }
 
 dependencies {
-    def dagger_version = "2.40.5"
-    implementation "com.google.dagger:dagger:$dagger_version"
-    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
-//    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.1"
-
     implementation 'androidx.core:core-ktx:1.9.0'
+    kapt "org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.5.0"
+
+    def composeBom = platform('androidx.compose:compose-bom:2023.03.00')
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+
+    // Compose
+    implementation "androidx.compose.runtime:runtime"
+    implementation "androidx.compose.ui:ui"
+    implementation "androidx.compose.foundation:foundation"
+    implementation "androidx.compose.foundation:foundation-layout"
+    implementation "androidx.compose.material3:material3"
+    implementation "androidx.compose.material:material-icons-extended"
+    implementation "androidx.compose.animation:animation"
+    implementation "androidx.compose.runtime:runtime-livedata"
+    implementation "androidx.compose.ui:ui-tooling-preview"
+    debugImplementation "androidx.compose.ui:ui-tooling"
+    implementation "com.google.accompanist:accompanist-themeadapter-material:0.28.0"
+
+    //Dagger
+    implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.6.1"
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
     implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4"
 }
