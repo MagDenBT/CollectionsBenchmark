@@ -2,8 +2,7 @@ package com.magdenbt.collectionsbenchmark.modelflow
 
 import android.content.Context
 import android.util.Log
-import android.view.View
-import androidx.lifecycle.Observer
+import androidx.compose.runtime.mutableStateOf
 import com.magdenbt.collectionsbenchmark.OperationBenchmark
 import com.magdenbt.collectionsbenchmark.R
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -14,24 +13,32 @@ import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
 class StatModel(
-    val context: Context, val operationType: OperationTypes, val observer: Observer<StatModel>
+    val context: Context,
+    val operationType: OperationTypes,
 ) : SingleObserver<String> {
 
     private var prefix = ""
     private var collectionType = ""
-    private var duration = "N/A"
+    var duration = "N/A"
+        set(value) {
+            field = value
+            setStatus()
+        }
 
     init {
         setTexts()
     }
 
+    var busy = mutableStateOf(false)
+//        private set
 
+    val status = mutableStateOf(createStatus())
 
-    var busy = View.GONE
-        private set
+    private fun setStatus() {
+        status.value = createStatus()
+    }
 
-    val status
-        get() = "$prefix $collectionType $duration ms"
+    private fun createStatus() = "$prefix $collectionType $duration ms"
 
     private fun setTexts() {
         when (operationType) {
@@ -159,20 +166,20 @@ class StatModel(
     }
 
     override fun onSubscribe(d: Disposable) {
-        busy = View.VISIBLE
-        observer.onChanged(this)
+        busy.value = true
+        // observer.onChanged(this)
     }
 
     override fun onSuccess(_duration: String) {
         duration = _duration
-        busy = View.GONE
-        observer.onChanged(this)
+        busy.value = false
+        // observer.onChanged(this)
     }
 
     override fun onError(e: Throwable) {
         duration = "ERROR"
-        busy = View.GONE
+        busy.value = false
         Log.e(this.javaClass.canonicalName, "Duration error - ${e.message}")
-        observer.onChanged(this)
+        // observer.onChanged(this)
     }
 }

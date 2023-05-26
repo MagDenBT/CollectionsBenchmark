@@ -1,25 +1,27 @@
 package com.magdenbt.collectionsbenchmark.ui.viewmodelflow
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
+import android.content.Context
+import androidx.lifecycle.ViewModel
 import com.magdenbt.collectionsbenchmark.CollectionsType
 import com.magdenbt.collectionsbenchmark.modelflow.StatModel
 import com.magdenbt.collectionsbenchmark.modelflow.StatRepository
 
 class StatViewModel(
-    _application: Application,
-    private val statRepository: StatRepository,
-    private val collectionsType: CollectionsType
-) : AndroidViewModel(_application) {
+    val context: Context,
+) : ViewModel() {
 
-    val statModelsLD: List<LiveData<StatModel>> by lazy {
-        statRepository.getModels(collectionsType)
-    }
+    val statRepository: StatRepository = StatRepository(context)
 
-    fun startBenchmark(sizeCollection: Int, amountElements: Int) {
-        for (liveData in statModelsLD) {
-            liveData.value?.startBenchmark(sizeCollection, amountElements)
+    val statModelsLD: Map<CollectionsType, List<StatModel>> =
+        mutableMapOf<CollectionsType, List<StatModel>>().apply {
+            CollectionsType.values().forEach { collectionsType ->
+                put(collectionsType, statRepository.getModels(collectionsType))
+            }
         }
+
+
+    fun startBenchmark(collectionsType: CollectionsType, sizeCollection: Int, amountElements: Int) {
+        statModelsLD.get(collectionsType)?.iterator()
+            ?.forEach { it.startBenchmark(sizeCollection, amountElements) }
     }
 }
