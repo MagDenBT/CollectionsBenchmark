@@ -2,11 +2,7 @@ package com.magdenbt.collectionsbenchmark.ui.viewflow
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -69,7 +66,7 @@ fun DialogCollectionSizeScreen(calculateAction: (Int) -> Unit) {
 }
 
 @Composable
-fun InvitationText(modifier: Modifier = Modifier) {
+private fun InvitationText(modifier: Modifier = Modifier) {
     Text(
         text = stringResource(id = R.string.text_view_dialog_invitation),
         style = LocalTextStyle.current.copy(fontWeight = FontWeight.Normal),
@@ -79,7 +76,7 @@ fun InvitationText(modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CollectionSizeInput(
+private fun CollectionSizeInput(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
@@ -91,11 +88,16 @@ fun CollectionSizeInput(
         label = { Text(stringResource(R.string.input_dialog_elements_amount_hint)) },
         textStyle = LocalTextStyle.current.copy(fontSize = 20.sp, lineHeight = 30.sp),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        colors = TextFieldDefaults.textFieldColors(
+            focusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+        ),
     )
 }
 
 @Composable
-fun CalculateButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
+private fun CalculateButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     Button(
         onClick = onClick,
         modifier = modifier,

@@ -4,15 +4,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
+import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -27,6 +30,7 @@ import com.magdenbt.collectionsbenchmark.R
 import com.magdenbt.collectionsbenchmark.modelflow.StatModel
 import com.magdenbt.collectionsbenchmark.modelflow.StatRepository
 import com.magdenbt.collectionsbenchmark.ui.theme.AppTheme
+import com.magdenbt.collectionsbenchmark.ui.theme.black
 import com.magdenbt.collectionsbenchmark.ui.theme.shapes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +38,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun ViewPagerFragmentComposeScreen(
+fun ScreenBody(
     startAction: (Int) -> Unit,
     statModels: SnapshotStateList<StatModel>?,
     columnAmount: Int,
@@ -63,7 +67,7 @@ fun ViewPagerFragmentComposeScreen(
             }
         }
         Spacer(modifier = Modifier.height(24.dp))
-        ResultsGreed(
+        ResultsGrid(
             columnAmount = columnAmount,
             statModels = statModels,
         )
@@ -91,18 +95,23 @@ fun ElementsAmountsInput(
         ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
+        colors = TextFieldDefaults.textFieldColors(
+            focusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+        ),
     )
 }
 
 @Composable
-fun StartButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
+private fun StartButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     Button(onClick = onClick, modifier = modifier, shape = shapes.extraSmall) {
         Text(stringResource(R.string.button_start_name))
     }
 }
 
 @Composable
-fun ResultsGreed(
+fun ResultsGrid(
     modifier: Modifier = Modifier,
     columnAmount: Int,
     statModels: SnapshotStateList<StatModel>?,
@@ -117,7 +126,7 @@ fun ResultsGreed(
     ) {
         statModels?.apply {
             items(this) {
-                Card() {
+                Card(colors = cardColors(contentColor = black), shape = RoundedCornerShape(16.dp)) {
                     Text(
                         text = it.status.value,
                         maxLines = 3,
@@ -125,7 +134,8 @@ fun ResultsGreed(
                         modifier = Modifier
                             .height(105.dp)
                             .width(105.dp)
-                            .wrapContentHeight(Alignment.CenterVertically),
+                            .wrapContentHeight(Alignment.CenterVertically)
+                            .padding(4.dp),
 
                         style = LocalTextStyle.current.copy(
                             fontSize = 10.sp,
@@ -147,11 +157,11 @@ fun ResultsGreed(
 
 @Preview(widthDp = 375, heightDp = 557, showBackground = true)
 @Composable
-fun ViewPagerFragmentComposeScreenPrev() {
+private fun ViewPagerFragmentComposeScreenPrev() {
     val statModels =
         StatRepository(LocalContext.current).getModels(CollectionsType.LIST).toMutableStateList()
     AppTheme {
-        ViewPagerFragmentComposeScreen({ elementsAmount ->
+        ScreenBody({ elementsAmount ->
             testOnStart(
                 statModels,
                 elementsAmount,
@@ -160,7 +170,7 @@ fun ViewPagerFragmentComposeScreenPrev() {
     }
 }
 
-fun testOnStart(statModels: SnapshotStateList<StatModel>?, elementsAmount: Int) {
+private fun testOnStart(statModels: SnapshotStateList<StatModel>?, elementsAmount: Int) {
     statModels?.forEach {
         it.busy.value = true
     }

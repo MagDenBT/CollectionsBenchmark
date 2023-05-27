@@ -11,7 +11,7 @@ private val LightColors = lightColorScheme(
     onPrimary = white,
     background = white,
     onBackground = black,
-    surface = gray_10,
+    surface = amber_700,
     onSurface = black,
     surfaceVariant = gray_10,
     onSurfaceVariant = gray_400,
@@ -21,7 +21,7 @@ private val LightColors = lightColorScheme(
 )
 
 val shapes = Shapes(
-    extraSmall = RoundedCornerShape(8.dp),
+    extraSmall = RoundedCornerShape(10.dp),
 )
 
 @Composable
