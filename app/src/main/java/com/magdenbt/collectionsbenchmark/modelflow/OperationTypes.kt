@@ -1,7 +1,5 @@
 package com.magdenbt.collectionsbenchmark.modelflow
 
-import com.magdenbt.collectionsbenchmark.CollectionsType
-
 enum class OperationTypes constructor(val collectionsType: CollectionsType) {
     ARRAY_LIST_ADDING_IN_THE_BEGINNING(CollectionsType.LIST),
     ARRAY_LIST_ADDING_IN_THE_MIDDLE(CollectionsType.LIST),
@@ -34,5 +32,4 @@ enum class OperationTypes constructor(val collectionsType: CollectionsType) {
     TREE_MAP_ADDING_NEW(CollectionsType.MAP),
     TREE_MAP_SEARCH_BY_KEY(CollectionsType.MAP),
     TREE_MAP_REMOVING(CollectionsType.MAP),
-
 }

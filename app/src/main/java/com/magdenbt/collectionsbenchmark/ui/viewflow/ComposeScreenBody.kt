@@ -25,8 +25,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.magdenbt.collectionsbenchmark.CollectionsType
 import com.magdenbt.collectionsbenchmark.R
+import com.magdenbt.collectionsbenchmark.modelflow.CollectionsType
 import com.magdenbt.collectionsbenchmark.modelflow.StatModel
 import com.magdenbt.collectionsbenchmark.modelflow.StatRepository
 import com.magdenbt.collectionsbenchmark.ui.theme.AppTheme
@@ -116,8 +116,6 @@ fun ResultsGrid(
     columnAmount: Int,
     statModels: SnapshotStateList<StatModel>?,
 ) {
-//    val tempState = statModels.observeAsState()
-
     LazyVerticalGrid(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(11.dp),
@@ -157,7 +155,7 @@ fun ResultsGrid(
 
 @Preview(widthDp = 375, heightDp = 557, showBackground = true)
 @Composable
-private fun ViewPagerFragmentComposeScreenPrev() {
+private fun ScreenBodyLISTPrev() {
     val statModels =
         StatRepository(LocalContext.current).getModels(CollectionsType.LIST).toMutableStateList()
     AppTheme {
@@ -167,6 +165,21 @@ private fun ViewPagerFragmentComposeScreenPrev() {
                 elementsAmount,
             )
         }, statModels, 3)
+    }
+}
+
+@Preview(widthDp = 375, heightDp = 557, showBackground = true)
+@Composable
+private fun ScreenBodyMAPPrev() {
+    val statModels =
+        StatRepository(LocalContext.current).getModels(CollectionsType.MAP).toMutableStateList()
+    AppTheme {
+        ScreenBody({ elementsAmount ->
+            testOnStart(
+                statModels,
+                elementsAmount,
+            )
+        }, statModels, 2)
     }
 }
 

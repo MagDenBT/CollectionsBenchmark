@@ -2,7 +2,7 @@ package com.magdenbt.collectionsbenchmark.ui.viewmodelflow
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.magdenbt.collectionsbenchmark.CollectionsType
+import com.magdenbt.collectionsbenchmark.modelflow.CollectionsType
 import com.magdenbt.collectionsbenchmark.modelflow.StatModel
 import com.magdenbt.collectionsbenchmark.modelflow.StatRepository
 
@@ -18,7 +18,6 @@ class StatViewModel(
                 put(collectionsType, statRepository.getModels(collectionsType))
             }
         }
-
 
     fun startBenchmark(collectionsType: CollectionsType, sizeCollection: Int, amountElements: Int) {
         statModelsLD.get(collectionsType)?.iterator()

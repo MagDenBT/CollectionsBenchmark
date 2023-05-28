@@ -1,7 +1,8 @@
 package com.magdenbt.collectionsbenchmark.ui
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 
 class SharedCollSizeViewModel : ViewModel() {
-        var collectionSize: Int = 0
+    val collectionSize = mutableStateOf(0)
 }

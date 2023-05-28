@@ -10,99 +10,134 @@ class OperationBenchmark {
     companion object {
 
         fun createOb(
-            sizeCollection: Int, elementsAmount: Int, operationType: OperationTypes
+            sizeCollection: Int,
+            elementsAmount: Int,
+            operationType: OperationTypes,
         ): Single<Long> {
             return Single.create { emitter ->
-                emitter.onSuccess(calculateDuration(
-                    sizeCollection, elementsAmount, operationType)
+                emitter.onSuccess(
+                    calculateDuration(
+                        sizeCollection,
+                        elementsAmount,
+                        operationType,
+                    ),
                 )
             }
         }
 
         private fun calculateDuration(
-            sizeCollection: Int, elementsAmount: Int, operationType: OperationTypes
+            sizeCollection: Int,
+            elementsAmount: Int,
+            operationType: OperationTypes,
         ): Long {
             return when (operationType) {
                 OperationTypes.ARRAY_LIST_ADDING_IN_THE_BEGINNING -> addingBeginningArrayList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.ARRAY_LIST_ADDING_IN_THE_MIDDLE -> addingMiddleArrayList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.ARRAY_LIST_ADDING_IN_THE_END -> addingEndArrayList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.ARRAY_LIST_SEARCH_BY_VALUE -> searchByValueArrayList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.ARRAY_LIST_REMOVING_IN_THE_BEGINNING -> removingBeginningArrayList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.ARRAY_LIST_REMOVING_IN_THE_MIDDLE -> removingMiddleArrayList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.ARRAY_LIST_REMOVING_IN_THE_END -> removingEndArrayList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.LINKED_LIST_ADDING_IN_THE_BEGINNING -> addingBeginningLinkedList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.LINKED_LIST_ADDING_IN_THE_MIDDLE -> addingMiddleLinkedList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.LINKED_LIST_ADDING_IN_THE_END -> addingEndLinkedList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.LINKED_LIST_SEARCH_BY_VALUE -> searchByValueLinkedList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.LINKED_LIST_REMOVING_IN_THE_BEGINNING -> removingBeginningLinkedList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.LINKED_LIST_REMOVING_IN_THE_MIDDLE -> removingMiddleLinkedList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.LINKED_LIST_REMOVING_IN_THE_END -> removingEndLinkedList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.COPY_ON_WRITE_AL_ADDING_IN_THE_BEGINNING -> addingBeginningCopyOnWriteArrayList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.COPY_ON_WRITE_AL_ADDING_IN_THE_MIDDLE -> addingMiddleCopyOnWriteArrayList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.COPY_ON_WRITE_AL_ADDING_IN_THE_END -> addingEndCopyOnWriteArrayList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.COPY_ON_WRITE_AL_SEARCH_BY_VALUE -> searchByValueCopyOnWriteArrayList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.COPY_ON_WRITE_AL_REMOVING_IN_THE_BEGINNING -> removingBeginningCopyOnWriteArrayList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.COPY_ON_WRITE_AL_REMOVING_IN_THE_MIDDLE -> removingMiddleCopyOnWriteArrayList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.COPY_ON_WRITE_AL_REMOVING_IN_THE_END -> removingEndCopyOnWriteArrayList(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.HASH_MAP_ADDING_NEW -> addingHashMap(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.HASH_MAP_SEARCH_BY_KEY -> searchingHashMap(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.HASH_MAP_REMOVING -> removingHashMap(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.TREE_MAP_ADDING_NEW -> addingTreeMap(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.TREE_MAP_SEARCH_BY_KEY -> searchingTreeMap(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 OperationTypes.TREE_MAP_REMOVING -> removingTreeMap(
-                    sizeCollection, elementsAmount
+                    sizeCollection,
+                    elementsAmount,
                 )
                 else -> -1
             }
@@ -149,7 +184,8 @@ class OperationBenchmark {
         }
 
         private fun removingEndCopyOnWriteArrayList(
-            sizeCollection: Int, _elementsAmount: Int
+            sizeCollection: Int,
+            _elementsAmount: Int,
         ): Long {
             var elementsAmount = _elementsAmount
             val ob = createCopyOnWriteArrayList(sizeCollection)
@@ -165,7 +201,8 @@ class OperationBenchmark {
         }
 
         private fun removingMiddleCopyOnWriteArrayList(
-            _sizeCollection: Int, _elementsAmount: Int
+            _sizeCollection: Int,
+            _elementsAmount: Int,
         ): Long {
             var sizeCollection = _sizeCollection
             var elementsAmount = _elementsAmount
@@ -183,7 +220,8 @@ class OperationBenchmark {
         }
 
         private fun removingBeginningCopyOnWriteArrayList(
-            _sizeCollection: Int, _elementsAmount: Int
+            _sizeCollection: Int,
+            _elementsAmount: Int,
         ): Long {
             var sizeCollection = _sizeCollection
             var elementsAmount = _elementsAmount
@@ -199,7 +237,8 @@ class OperationBenchmark {
         }
 
         private fun searchByValueCopyOnWriteArrayList(
-            sizeCollection: Int, elementsAmount: Int
+            sizeCollection: Int,
+            elementsAmount: Int,
         ): Long {
             val ob = createCopyOnWriteArrayList(sizeCollection)
             val value = 0
@@ -224,7 +263,8 @@ class OperationBenchmark {
         }
 
         private fun addingMiddleCopyOnWriteArrayList(
-            sizeCollection: Int, elementsAmount: Int
+            sizeCollection: Int,
+            elementsAmount: Int,
         ): Long {
             val ob = createCopyOnWriteArrayList(sizeCollection)
             val value = 0
@@ -240,7 +280,8 @@ class OperationBenchmark {
         }
 
         private fun addingBeginningCopyOnWriteArrayList(
-            sizeCollection: Int, elementsAmount: Int
+            sizeCollection: Int,
+            elementsAmount: Int,
         ): Long {
             val ob = createCopyOnWriteArrayList(sizeCollection)
             val value = 0

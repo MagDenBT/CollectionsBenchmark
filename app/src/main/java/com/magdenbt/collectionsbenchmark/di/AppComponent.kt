@@ -6,7 +6,6 @@ import com.magdenbt.collectionsbenchmark.di.mainactivity.MainComponent
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
-import dagger.Subcomponent
 import javax.inject.Singleton
 
 @Singleton
@@ -22,7 +21,7 @@ interface AppComponent {
     }
 
     fun mainComponent(): MainComponent.Factory
-//    fun VPFragmentComponentBuilder(): ViewPagerFragmentComponent.Builder
+
 }
 
 @Module(subcomponents = [MainComponent::class])

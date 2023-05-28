@@ -1,6 +1,7 @@
 package com.magdenbt.collectionsbenchmark.ui.viewflow
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -9,8 +10,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -74,20 +77,27 @@ private fun InvitationText(modifier: Modifier = Modifier) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun CollectionSizeInput(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     TextField(
         modifier = modifier,
         value = value,
         onValueChange = onValueChange,
+        singleLine = true,
         label = { Text(stringResource(R.string.input_dialog_elements_amount_hint)) },
         textStyle = LocalTextStyle.current.copy(fontSize = 20.sp, lineHeight = 30.sp),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+        keyboardActions = KeyboardActions(
+
+            onDone = { keyboardController?.hide() },
+        ),
         colors = TextFieldDefaults.textFieldColors(
             focusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,

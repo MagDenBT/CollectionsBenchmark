@@ -2,6 +2,7 @@
 
 package com.magdenbt.collectionsbenchmark.ui.viewflow
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.updateTransition
@@ -22,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.pager.*
-import com.magdenbt.collectionsbenchmark.CollectionsType
 import com.magdenbt.collectionsbenchmark.R
+import com.magdenbt.collectionsbenchmark.modelflow.CollectionsType
 import com.magdenbt.collectionsbenchmark.ui.theme.AppTheme
 import com.magdenbt.collectionsbenchmark.ui.theme.black
 import com.magdenbt.collectionsbenchmark.ui.theme.white
@@ -33,7 +34,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PagerScreen(viewModel: StatViewModel, collectionSize: Int) {
+fun PagerScreen(viewModel: StatViewModel, collectionSize: MutableState<Int>) {
     val composeScreens = getComposeScreens(viewModel, collectionSize)
     val pagerState = rememberPagerState()
 
@@ -153,20 +154,22 @@ private fun TabContent(composeScreens: List<ComposeScreen>, pagerState: PagerSta
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Preview(heightDp = 796, widthDp = 375, showBackground = true)
 @Composable
 private fun TabScreenPreview() {
     val viewModel: StatViewModel = viewModel(factory = StatViewModelFactory(LocalContext.current))
+    val collSize = mutableStateOf(100)
 
     AppTheme {
-        PagerScreen(viewModel, 100)
+        PagerScreen(viewModel, collSize)
     }
 }
 
 @Composable
 private fun getComposeScreens(
     viewModel: StatViewModel,
-    collectionSize: Int,
+    collectionSize: MutableState<Int>,
 ): List<ComposeScreen> {
     return mutableListOf<ComposeScreen>().apply {
         viewModel.statModelsLD.forEach(
@@ -184,7 +187,7 @@ private fun getComposeScreens(
                             collectionSize.let {
                                 viewModel.startBenchmark(
                                     collectionsType,
-                                    it,
+                                    it.value,
                                     elementsAmount,
                                 )
                             }

@@ -4,12 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.magdenbt.collectionsbenchmark.R
-import com.magdenbt.collectionsbenchmark.ui.theme.AppTheme
 import javax.inject.Inject
 
 class DialogCollectionSize @Inject constructor() : DialogFragment() {
@@ -24,14 +21,7 @@ class DialogCollectionSize @Inject constructor() : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        return ComposeView(requireContext()).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                AppTheme {
-                    DialogCollectionSizeScreen { calculate(it) }
-                }
-            }
-        }
+        return dialogFragmentComposeView(true) { DialogCollectionSizeScreen { calculate(it) } }
     }
 
     private fun calculate(input: Int) {
