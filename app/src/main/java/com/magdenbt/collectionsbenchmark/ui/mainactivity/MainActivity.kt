@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.ui.viewflow
+package com.magdenbt.collectionsbenchmark.ui.mainactivity
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -6,16 +6,17 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import com.magdenbt.collectionsbenchmark.InitApp
-import com.magdenbt.collectionsbenchmark.ui.SharedCollSizeViewModel
+import com.magdenbt.collectionsbenchmark.ui.sizerequestdialog.SizeRequestDialog
 import com.magdenbt.collectionsbenchmark.ui.theme.AppTheme
-import com.magdenbt.collectionsbenchmark.ui.viewmodelflow.StatViewModel
-import com.magdenbt.collectionsbenchmark.ui.viewmodelflow.StatViewModelFactory
+import com.magdenbt.collectionsbenchmark.viewmodelflow.SharedCollSizeViewModel
+import com.magdenbt.collectionsbenchmark.viewmodelflow.StatViewModel
+import com.magdenbt.collectionsbenchmark.viewmodelflow.StatViewModelFactory
 import javax.inject.Inject
 
 class MainActivity : FragmentActivity() {
 
     @Inject
-    lateinit var dialogCollectionSize: dagger.Lazy<DialogCollectionSize>
+    lateinit var sizeRequestDialog: dagger.Lazy<SizeRequestDialog>
 
     @Inject
     lateinit var sharedCollSizeVM: SharedCollSizeViewModel
@@ -38,12 +39,14 @@ class MainActivity : FragmentActivity() {
         }
 
         if (sharedCollSizeVM.collectionSize.value == 0) {
-            dialogCollectionSize.get().isCancelable = false
-            dialogCollectionSize.get().show(supportFragmentManager, "SomeTag")
+            sizeRequestDialog.get().apply {
+                isCancelable = false
+                show(supportFragmentManager, "SomeTag")
+            }
         }
         setContent {
             AppTheme {
-                PagerScreen(viewModel = viewModel, collectionSize = sharedCollSizeVM.collectionSize)
+                MainPager(viewModel = viewModel, collectionSize = sharedCollSizeVM.collectionSize)
             }
         }
     }

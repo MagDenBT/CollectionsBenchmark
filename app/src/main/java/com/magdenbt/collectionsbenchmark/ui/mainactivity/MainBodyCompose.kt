@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.ui.viewflow
+package com.magdenbt.collectionsbenchmark.ui.mainactivity
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -38,16 +39,19 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun ScreenBody(
+fun MainBody(
     startAction: (Int) -> Unit,
     statModels: SnapshotStateList<StatModel>?,
     columnAmount: Int,
 ) {
-    var elementAmount by remember {
+    var elementAmount by rememberSaveable {
         mutableStateOf("")
     }
 
-    Column(Modifier.padding(start = 26.dp, end = 12.dp)) {
+    Column(
+        Modifier.padding(start = 19.dp, end = 19.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         Row(Modifier.height(62.dp)) {
             ElementsAmountsInput(
                 Modifier
@@ -124,15 +128,18 @@ fun ResultsGrid(
     ) {
         statModels?.apply {
             items(this) {
-                Card(colors = cardColors(contentColor = black), shape = RoundedCornerShape(16.dp)) {
+                Card(
+                    Modifier.height(105.dp)
+                        .width(105.dp),
+                    colors = cardColors(contentColor = black),
+                    shape = RoundedCornerShape(16.dp),
+                ) {
                     Text(
                         text = it.status.value,
                         maxLines = 3,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .height(105.dp)
-                            .width(105.dp)
-                            .wrapContentHeight(Alignment.CenterVertically)
+                        modifier =
+                        Modifier.fillMaxSize().wrapContentHeight()
                             .padding(4.dp),
 
                         style = LocalTextStyle.current.copy(
@@ -159,7 +166,7 @@ private fun ScreenBodyLISTPrev() {
     val statModels =
         StatRepository(LocalContext.current).getModels(CollectionsType.LIST).toMutableStateList()
     AppTheme {
-        ScreenBody({ elementsAmount ->
+        MainBody({ elementsAmount ->
             testOnStart(
                 statModels,
                 elementsAmount,
@@ -174,7 +181,7 @@ private fun ScreenBodyMAPPrev() {
     val statModels =
         StatRepository(LocalContext.current).getModels(CollectionsType.MAP).toMutableStateList()
     AppTheme {
-        ScreenBody({ elementsAmount ->
+        MainBody({ elementsAmount ->
             testOnStart(
                 statModels,
                 elementsAmount,

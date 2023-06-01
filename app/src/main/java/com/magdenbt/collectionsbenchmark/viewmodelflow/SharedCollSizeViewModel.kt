@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.ui
+package com.magdenbt.collectionsbenchmark.viewmodelflow
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

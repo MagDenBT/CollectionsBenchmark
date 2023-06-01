@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalPagerApi::class, ExperimentalFoundationApi::class)
 
-package com.magdenbt.collectionsbenchmark.ui.viewflow
+package com.magdenbt.collectionsbenchmark.ui.mainactivity
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateDp
@@ -28,17 +28,17 @@ import com.magdenbt.collectionsbenchmark.modelflow.CollectionsType
 import com.magdenbt.collectionsbenchmark.ui.theme.AppTheme
 import com.magdenbt.collectionsbenchmark.ui.theme.black
 import com.magdenbt.collectionsbenchmark.ui.theme.white
-import com.magdenbt.collectionsbenchmark.ui.viewmodelflow.StatViewModel
-import com.magdenbt.collectionsbenchmark.ui.viewmodelflow.StatViewModelFactory
+import com.magdenbt.collectionsbenchmark.viewmodelflow.StatViewModel
+import com.magdenbt.collectionsbenchmark.viewmodelflow.StatViewModelFactory
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PagerScreen(viewModel: StatViewModel, collectionSize: MutableState<Int>) {
+fun MainPager(viewModel: StatViewModel, collectionSize: MutableState<Int>) {
     val composeScreens = getComposeScreens(viewModel, collectionSize)
     val pagerState = rememberPagerState()
 
-    Scaffold(topBar = { TopBar() }) { padding ->
+    Scaffold(topBar = { TopBar() }, contentWindowInsets = WindowInsets(0.dp)) { padding ->
         Column(modifier = Modifier.padding(padding)) {
             Tabs(composeScreens, pagerState, Modifier.height(41.dp))
             Spacer(modifier = Modifier.height(24.dp))
@@ -149,7 +149,11 @@ private fun CustomIndicator(
 
 @Composable
 private fun TabContent(composeScreens: List<ComposeScreen>, pagerState: PagerState) {
-    HorizontalPager(count = composeScreens.size, state = pagerState) { page ->
+    HorizontalPager(
+        count = composeScreens.size,
+        state = pagerState,
+        verticalAlignment = Alignment.Top,
+    ) { page ->
         composeScreens[page].screen()
     }
 }
@@ -162,7 +166,7 @@ private fun TabScreenPreview() {
     val collSize = mutableStateOf(100)
 
     AppTheme {
-        PagerScreen(viewModel, collSize)
+        MainPager(viewModel, collSize)
     }
 }
 
@@ -183,7 +187,7 @@ private fun getComposeScreens(
 
                 add(
                     ComposeScreen(title) {
-                        ScreenBody({ elementsAmount ->
+                        MainBody({ elementsAmount ->
                             collectionSize.let {
                                 viewModel.startBenchmark(
                                     collectionsType,

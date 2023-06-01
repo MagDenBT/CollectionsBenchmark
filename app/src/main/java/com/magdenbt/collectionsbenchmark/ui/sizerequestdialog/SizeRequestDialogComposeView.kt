@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.ui.viewflow
+package com.magdenbt.collectionsbenchmark.ui.sizerequestdialog
 
 import android.app.Dialog
 import android.content.Context
@@ -27,7 +27,6 @@ fun DialogFragment.dialogFragmentComposeView(
             ViewGroup.LayoutParams.MATCH_PARENT,
         )
 
-        // Another interesting flaw. If you use other strategies in DialogFragment you may get crashes 🫠
         setViewCompositionStrategy(strategy = ViewCompositionStrategy.DisposeOnDetachedFromWindow)
 
         setContent {
@@ -44,7 +43,6 @@ internal class DialogFragmentComposeView(
 ) : AbstractComposeView(context, null, 0),
     DialogWindowProvider {
 
-    // The fix is here
     override val window get() = dialogProvider().window!!
 
     private val content = mutableStateOf<(@Composable () -> Unit)?>(null)

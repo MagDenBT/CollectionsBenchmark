@@ -1,8 +1,8 @@
 package com.magdenbt.collectionsbenchmark.di
 
 import androidx.lifecycle.ViewModelProvider
-import com.magdenbt.collectionsbenchmark.ui.SharedCollSizeViewModel
-import com.magdenbt.collectionsbenchmark.ui.viewflow.MainActivity
+import com.magdenbt.collectionsbenchmark.ui.mainactivity.MainActivity
+import com.magdenbt.collectionsbenchmark.viewmodelflow.SharedCollSizeViewModel
 import dagger.Module
 import dagger.Provides
 

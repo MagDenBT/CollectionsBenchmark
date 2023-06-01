@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.ui.viewflow
+package com.magdenbt.collectionsbenchmark.ui.sizerequestdialog
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -26,7 +26,7 @@ import com.magdenbt.collectionsbenchmark.ui.theme.AppTheme
 import com.magdenbt.collectionsbenchmark.ui.theme.shapes
 
 @Composable
-fun DialogCollectionSizeScreen(calculateAction: (Int) -> Unit) {
+fun SizeRequestScreen(calculateAction: (Int) -> Unit) {
     var inputSize by remember {
         mutableStateOf("")
     }
@@ -121,6 +121,6 @@ private fun CalculateButton(modifier: Modifier = Modifier, onClick: () -> Unit) 
 @Composable
 fun DialogCollectionSizeScreenPrev() {
     AppTheme {
-        DialogCollectionSizeScreen({})
+        SizeRequestScreen({})
     }
 }

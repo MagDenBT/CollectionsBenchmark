@@ -28,15 +28,6 @@ val shapes = Shapes(
 fun AppTheme(
     content: @Composable () -> Unit,
 ) {
-//    val view = LocalView.current
-//    if (!view.isInEditMode) {
-//        SideEffect {
-//            val window = (view.context as Activity).window
-//            window.statusBarColor = LightColors.primary.toArgb()
-//            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = useDarkTheme
-//        }
-//    }
-
     MaterialTheme(
         colorScheme = LightColors,
         typography = typography,

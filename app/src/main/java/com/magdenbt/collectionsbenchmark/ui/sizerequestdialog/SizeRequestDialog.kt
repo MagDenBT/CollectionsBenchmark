@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.ui.viewflow
+package com.magdenbt.collectionsbenchmark.ui.sizerequestdialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,9 +7,17 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.magdenbt.collectionsbenchmark.R
+import com.magdenbt.collectionsbenchmark.ui.mainactivity.MainActivity
 import javax.inject.Inject
 
-class DialogCollectionSize @Inject constructor() : DialogFragment() {
+class SizeRequestDialog @Inject constructor() : DialogFragment() {
+
+    override fun onStart() {
+        super.onStart()
+        val width = ViewGroup.LayoutParams.MATCH_PARENT
+        val height = ViewGroup.LayoutParams.MATCH_PARENT
+        dialog?.window?.setLayout(width, height)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +29,7 @@ class DialogCollectionSize @Inject constructor() : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        return dialogFragmentComposeView(true) { DialogCollectionSizeScreen { calculate(it) } }
+        return dialogFragmentComposeView(true) { SizeRequestScreen { calculate(it) } }
     }
 
     private fun calculate(input: Int) {

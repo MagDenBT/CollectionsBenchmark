@@ -1,4 +1,4 @@
-package com.magdenbt.collectionsbenchmark.ui.viewmodelflow
+package com.magdenbt.collectionsbenchmark.viewmodelflow
 
 import android.content.Context
 import android.util.Log

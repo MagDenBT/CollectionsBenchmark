@@ -14,10 +14,9 @@
         android:theme="@style/Theme.CollectionsBenchmark"
         tools:targetApi="31">
         <activity
-            android:name=".ui.viewflow.MainActivity"
+            android:name=".ui.mainactivity.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
