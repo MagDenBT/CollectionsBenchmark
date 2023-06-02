@@ -38,6 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainBody(
     startAction: (Int) -> Unit,
@@ -47,7 +48,7 @@ fun MainBody(
     var elementAmount by rememberSaveable {
         mutableStateOf("")
     }
-
+    val softwareKeyboard = LocalSoftwareKeyboardController.current
     Column(
         Modifier.padding(start = 19.dp, end = 19.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -67,7 +68,10 @@ fun MainBody(
                     .fillMaxHeight()
                     .width(127.dp),
             ) {
-                elementAmount.toIntOrNull()?.let { startAction(it) }
+                elementAmount.toIntOrNull()?.let {
+                    softwareKeyboard?.hide()
+                    startAction(it)
+                }
             }
         }
         Spacer(modifier = Modifier.height(24.dp))
@@ -128,9 +132,11 @@ fun ResultsGrid(
     ) {
         statModels?.apply {
             items(this) {
+                val sizeModifier = Modifier.height(105.dp)
+                    .width(105.dp)
+
                 Card(
-                    Modifier.height(105.dp)
-                        .width(105.dp),
+                    sizeModifier,
                     colors = cardColors(contentColor = black),
                     shape = RoundedCornerShape(16.dp),
                 ) {
@@ -150,10 +156,12 @@ fun ResultsGrid(
                     )
                 }
                 if (it.busy.value) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.padding(20.dp),
-                        strokeWidth = 16.dp,
-                    )
+                    Card() {
+                        CircularProgressIndicator(
+                            modifier = sizeModifier.padding(10.dp),
+                            strokeWidth = 16.dp,
+                        )
+                    }
                 }
             }
         }

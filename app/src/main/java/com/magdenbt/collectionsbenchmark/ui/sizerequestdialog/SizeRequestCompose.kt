@@ -25,6 +25,7 @@ import com.magdenbt.collectionsbenchmark.R
 import com.magdenbt.collectionsbenchmark.ui.theme.AppTheme
 import com.magdenbt.collectionsbenchmark.ui.theme.shapes
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SizeRequestScreen(calculateAction: (Int) -> Unit) {
     var inputSize by remember {
@@ -36,6 +37,7 @@ fun SizeRequestScreen(calculateAction: (Int) -> Unit) {
             .padding(horizontal = 30.dp),
     ) {
         val (column, button) = createRefs()
+        val softwareKeyboard = LocalSoftwareKeyboardController.current
         Column(
             modifier = Modifier
                 .width(375.dp)
@@ -63,7 +65,12 @@ fun SizeRequestScreen(calculateAction: (Int) -> Unit) {
                 .width(315.dp)
                 .height(62.dp)
                 .constrainAs(button) { bottom.linkTo(parent.bottom, margin = 39.dp) },
-            onClick = { inputSize.toIntOrNull()?.let(calculateAction) },
+            onClick = {
+                inputSize.toIntOrNull()?.let {
+                    softwareKeyboard?.hide()
+                    calculateAction(it)
+                }
+            },
         )
     }
 }
